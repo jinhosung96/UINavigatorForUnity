@@ -1,41 +1,39 @@
 #if PUN_2_SUPPORT
-
 using Photon.Pun;
 using System.Collections.Generic;
 
-/// <summary>
-/// »ó¼Ó ¹Þ´Â °´Ã¼´Â View ID¸¦ ÅëÇØ °´Ã¼¸¦ ±¸ÇÒ ¼ö ÀÖ°Ô µÈ´Ù.
-/// </summary>
-/// <typeparam name="T"></typeparam>
-public class PunObject<T> : MonoBehaviourPun, IPunInstantiateMagicCallback where T : PunObject<T>
+namespace JHS.Library.Other
 {
-    #region Field
-
-    protected static Dictionary<int, T> punObjects = new Dictionary<int, T>();
-
-    #endregion
-
-    #region Unity Lifecycle
-
-    void OnDestroy() => punObjects.Remove(photonView.ViewID);
-
-    #endregion
-
-    #region ÀçÁ¤ÀÇ ¸Þ¼Òµå
-
-    public virtual void OnPhotonInstantiate(PhotonMessageInfo info) => punObjects.Add(photonView.ViewID, (T)this);
-
-    #endregion
-
-    #region ¿ÜºÎ ¸Þ¼Òµå
-
-    public static T Get(int viewID)
+    public class PunObject<T> : MonoBehaviourPun, IPunInstantiateMagicCallback where T : PunObject<T>
     {
-        punObjects.TryGetValue(viewID, out var punObject);
-        return punObject;
-    }
+        #region Field
 
-    #endregion
+        protected static Dictionary<int, T> punObjects = new Dictionary<int, T>();
+
+        #endregion
+
+        #region Unity Lifecycle
+
+        void OnDestroy() => punObjects.Remove(photonView.ViewID);
+
+        #endregion
+
+        #region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½
+
+        public virtual void OnPhotonInstantiate(PhotonMessageInfo info) => punObjects.Add(photonView.ViewID, (T)this);
+
+        #endregion
+
+        #region ï¿½Üºï¿½ ï¿½Þ¼Òµï¿½
+
+        public static T Get(int viewID)
+        {
+            punObjects.TryGetValue(viewID, out var punObject);
+            return punObject;
+        }
+
+        #endregion
+    }
 }
 
 #endif

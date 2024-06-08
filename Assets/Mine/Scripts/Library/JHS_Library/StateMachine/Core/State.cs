@@ -1,12 +1,12 @@
 ﻿#if UNIRX_SUPPORT
 
 using System;
-using Mine.Code.Framework.Extension;
+using JHS.Library.Extension;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-namespace Library.StateMachine
+namespace JHS.Library.StateMachine
 {
     //각 State를 상속받아서 각종 State를 정의한다.
     //순서는 Begin - Update - LateUpdate - End 스트림

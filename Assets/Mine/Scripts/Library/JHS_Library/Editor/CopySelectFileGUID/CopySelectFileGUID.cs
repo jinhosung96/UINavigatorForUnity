@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
-using Debug = Mine.Code.Framework.Util.Debug.Debug;
+using Debug = JHS.Library.Util.Debug.Debug;
 
-namespace Mine.Code.Framework.Editor.CopySelectFileGUID
+namespace JHS.Library.Editor.CopySelectFileGUID
 {
     public class CopySelectFileGuid : EditorWindow
     {

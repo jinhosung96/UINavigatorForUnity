@@ -4,11 +4,13 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-/// <summary>
-/// OnMouseUpAsButton에 대한 UniRx Trigger 추가
-/// </summary>
-[DisallowMultipleComponent]
-public class ObservableOnMouseUpAsButtonTrigger : ObservableTriggerBase
+namespace JHS.Library.UniRxCustom
+{
+    /// <summary>
+    /// OnMouseUpAsButton에 대한 UniRx Trigger 추가
+    /// </summary>
+    [DisallowMultipleComponent]
+    public class ObservableOnMouseUpAsButtonTrigger : ObservableTriggerBase
 {
     #region variable
 
@@ -35,18 +37,19 @@ public class ObservableOnMouseUpAsButtonTrigger : ObservableTriggerBase
         }
     }
 
-    #endregion
+#endregion
 
-    #region method
+#region method
 
-    protected override void RaiseOnCompletedOnDestroy()
+protected override void RaiseOnCompletedOnDestroy()
+{
+    if (onMouseUpAsButton != null)
     {
-        if (onMouseUpAsButton != null)
-        {
-            onMouseUpAsButton.OnCompleted();
-        }
+        onMouseUpAsButton.OnCompleted();
     }
+}
 
-    #endregion
+#endregion
+}
 }
 #endif

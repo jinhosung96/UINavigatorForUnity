@@ -2,7 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
 
-namespace Library.Util.Reflection
+namespace JHS.Library.Util.Reflection
 {
     public static class ReflectionUtility
     {

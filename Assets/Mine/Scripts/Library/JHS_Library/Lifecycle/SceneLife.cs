@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Mine.Code.Framework.Lifecycle
+namespace JHS.Library.Lifecycle
 {
     public sealed class SceneLife : MonoBehaviour
     {

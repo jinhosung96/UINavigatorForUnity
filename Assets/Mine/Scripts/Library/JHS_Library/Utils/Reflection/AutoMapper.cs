@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Library.Util.Reflection
+namespace JHS.Library.Util.Reflection
 {
     public static class AutoMapper
     {

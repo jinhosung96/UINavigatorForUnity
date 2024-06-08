@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
-namespace Library.Util.Reflection
+namespace JHS.Library.Util.Reflection
 {
     // Type을 키 값으로 PropertyInfo를 캐싱하는 클래스
     public static class PropertyCache

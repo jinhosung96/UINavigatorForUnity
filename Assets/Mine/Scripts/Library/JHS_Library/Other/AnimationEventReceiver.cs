@@ -3,7 +3,7 @@ using System;
 using UniRx;
 using UnityEngine;
 
-namespace Mine.Code.Framework.Other
+namespace JHS.Library.Other
 {
     public class AnimationEventReceiver : MonoBehaviour
     {

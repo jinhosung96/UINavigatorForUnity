@@ -4,49 +4,52 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-/// <summary>
-/// OnMouseEnter에 대한 UniRx Trigger 추가
-/// </summary>
-[DisallowMultipleComponent]
-public class ObservableOnMouseEnterTrigger : ObservableTriggerBase
+namespace JHS.Library.UniRxCustom
 {
-    #region variable
-
-    Subject<Unit> onMouseEnter;
-
-    #endregion
-
-    #region property
-
-    public IObservable<Unit> OnMouseEnterAsObservable()
+    /// <summary>
+    /// OnMouseEnter에 대한 UniRx Trigger 추가
+    /// </summary>
+    [DisallowMultipleComponent]
+    public class ObservableOnMouseEnterTrigger : ObservableTriggerBase
     {
-        return onMouseEnter ??= new Subject<Unit>();
-    }
+        #region variable
 
-    #endregion
+        Subject<Unit> onMouseEnter;
 
-    #region unity event
+        #endregion
 
-    void OnMouseEnter()
-    {
-        if (onMouseEnter != null)
+        #region property
+
+        public IObservable<Unit> OnMouseEnterAsObservable()
         {
-            onMouseEnter.OnNext(default);
+            return onMouseEnter ??= new Subject<Unit>();
         }
-    }
 
-    #endregion
+        #endregion
 
-    #region method
+        #region unity event
 
-    protected override void RaiseOnCompletedOnDestroy()
-    {
-        if (onMouseEnter != null)
+        void OnMouseEnter()
         {
-            onMouseEnter.OnCompleted();
+            if (onMouseEnter != null)
+            {
+                onMouseEnter.OnNext(default);
+            }
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region method
+
+        protected override void RaiseOnCompletedOnDestroy()
+        {
+            if (onMouseEnter != null)
+            {
+                onMouseEnter.OnCompleted();
+            }
+        }
+
+        #endregion
+    }
 }
 #endif

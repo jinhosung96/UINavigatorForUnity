@@ -1,28 +1,31 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SliderView : MonoBehaviour
+namespace JHS.Library.View
 {
-    #region Field
-        
-    Slider sliderUI;
-
-    #endregion
-
-    #region Unity Lifecycle
-
-    private void Awake() => sliderUI = GetComponent<Slider>();
-
-    #endregion
-
-    #region Public Methods
-
-    public void UpdateUI(float value)
+    public class SliderView : MonoBehaviour
     {
-        sliderUI.value = value;
-        if (sliderUI.value <= 0) sliderUI.fillRect.gameObject.SetActive(false);
-        else sliderUI.fillRect.gameObject.SetActive(true);
-    }
+        #region Field
 
-    #endregion
+        Slider sliderUI;
+
+        #endregion
+
+        #region Unity Lifecycle
+
+        private void Awake() => sliderUI = GetComponent<Slider>();
+
+        #endregion
+
+        #region Public Methods
+
+        public void UpdateUI(float value)
+        {
+            sliderUI.value = value;
+            if (sliderUI.value <= 0) sliderUI.fillRect.gameObject.SetActive(false);
+            else sliderUI.fillRect.gameObject.SetActive(true);
+        }
+
+        #endregion
+    }
 }

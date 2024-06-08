@@ -4,7 +4,7 @@ using System;
 using UniRx;
 using UniRx.Triggers;
 
-namespace Library.UniRxCustom
+namespace JHS.Library.UniRxCustom
 {
     /// <summary>
     /// OnDrawGizmos�� ���� UniRx Trigger �߰�

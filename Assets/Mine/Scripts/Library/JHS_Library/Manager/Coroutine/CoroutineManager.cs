@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Mine.Code.Framework.Manager.Coroutine
+namespace JHS.Library.Manager.Coroutine
 {
     public class CoroutineManager
     {

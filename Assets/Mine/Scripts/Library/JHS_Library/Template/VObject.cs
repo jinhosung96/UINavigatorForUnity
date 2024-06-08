@@ -1,19 +1,23 @@
 #if VCONTAINER_SUPPORT
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-public class VObject<T> where T : LifetimeScope
+namespace JHS.Library.Template
 {
-    #region Properties
-    
-    [Inject] protected LifetimeScope context { private get; set; }
+    public class VObject<T> where T : LifetimeScope
+    {
+        #region Properties
 
-    protected T Context => context as T;
+        [Inject] protected LifetimeScope context { private get; set; }
 
-    #endregion
+        protected T Context => context as T;
+
+        #endregion
+    }
 }
 
 #endif

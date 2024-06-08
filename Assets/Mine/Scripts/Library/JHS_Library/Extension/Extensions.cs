@@ -15,9 +15,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Cysharp.Threading.Tasks;
 #endif
 using UnityEngine.UI;
-using Mine.Code.Framework.Lifecycle;
+using JHS.Library.Lifecycle;
 
-namespace Mine.Code.Framework.Extension
+namespace JHS.Library.Extension
 {
     /// <summary>
     /// 확장 메소드 정의

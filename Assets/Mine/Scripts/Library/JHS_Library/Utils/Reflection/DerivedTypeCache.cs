@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
-namespace Library.Util.Reflection
+namespace JHS.Library.Util.Reflection
 {
     public static class DerivedTypeCache
     {

@@ -4,49 +4,52 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-/// <summary>
-/// OnMouseUp에 대한 UniRx Trigger 추가
-/// </summary>
-[DisallowMultipleComponent]
-public class ObservableOnMouseUpTrigger : ObservableTriggerBase
+namespace JHS.Library.UniRxCustom
 {
-    #region variable
-
-    Subject<Unit> onMouseUp;
-
-    #endregion
-
-    #region property
-
-    public IObservable<Unit> OnMouseUpAsObservable()
+    /// <summary>
+    /// OnMouseUp에 대한 UniRx Trigger 추가
+    /// </summary>
+    [DisallowMultipleComponent]
+    public class ObservableOnMouseUpTrigger : ObservableTriggerBase
     {
-        return onMouseUp ??= new Subject<Unit>();
-    }
+        #region variable
 
-    #endregion
+        Subject<Unit> onMouseUp;
 
-    #region unity event
+        #endregion
 
-    void OnMouseUp()
-    {
-        if (onMouseUp != null)
+        #region property
+
+        public IObservable<Unit> OnMouseUpAsObservable()
         {
-            onMouseUp.OnNext(default);
+            return onMouseUp ??= new Subject<Unit>();
         }
-    }
 
-    #endregion
+        #endregion
 
-    #region method
+        #region unity event
 
-    protected override void RaiseOnCompletedOnDestroy()
-    {
-        if (onMouseUp != null)
+        void OnMouseUp()
         {
-            onMouseUp.OnCompleted();
+            if (onMouseUp != null)
+            {
+                onMouseUp.OnNext(default);
+            }
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region method
+
+        protected override void RaiseOnCompletedOnDestroy()
+        {
+            if (onMouseUp != null)
+            {
+                onMouseUp.OnCompleted();
+            }
+        }
+
+        #endregion
+    }
 }
 #endif

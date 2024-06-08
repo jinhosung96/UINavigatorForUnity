@@ -1,11 +1,11 @@
 #if UNIRX_SUPPORT && UNITASK_SUPPORT
 using Cysharp.Threading.Tasks;
-using Mine.Code.Framework.Manager.UINavigator.Runtime;
+using JHS.Library.Manager.UINavigator.Runtime;
 using UniRx;
 using UnityEngine;
 using VContainer.Unity;
 
-namespace Mine.Code.Framework.Presenter
+namespace JHS.Library.Presenter
 {
     public class BackPresenter : IStartable
     {

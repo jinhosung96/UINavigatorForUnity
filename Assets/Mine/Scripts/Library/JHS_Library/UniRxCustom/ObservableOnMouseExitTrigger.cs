@@ -4,49 +4,52 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-/// <summary>
-/// OnMouseExit에 대한 UniRx Trigger 추가
-/// </summary>
-[DisallowMultipleComponent]
-public class ObservableOnMouseExitTrigger : ObservableTriggerBase
+namespace JHS.Library.UniRxCustom
 {
-    #region variable
-
-    Subject<Unit> onMouseExit;
-
-    #endregion
-
-    #region property
-
-    public IObservable<Unit> OnMouseExitAsObservable()
+    /// <summary>
+    /// OnMouseExit에 대한 UniRx Trigger 추가
+    /// </summary>
+    [DisallowMultipleComponent]
+    public class ObservableOnMouseExitTrigger : ObservableTriggerBase
     {
-        return onMouseExit ??= new Subject<Unit>();
-    }
+        #region variable
 
-    #endregion
+        Subject<Unit> onMouseExit;
 
-    #region unity event
-    
-    void OnMouseExit()
-    {
-        if (onMouseExit != null)
+        #endregion
+
+        #region property
+
+        public IObservable<Unit> OnMouseExitAsObservable()
         {
-            onMouseExit.OnNext(default);
+            return onMouseExit ??= new Subject<Unit>();
         }
-    }
 
-    #endregion
+        #endregion
 
-    #region method
+        #region unity event
 
-    protected override void RaiseOnCompletedOnDestroy()
-    {
-        if (onMouseExit != null)
+        void OnMouseExit()
         {
-            onMouseExit.OnCompleted();
+            if (onMouseExit != null)
+            {
+                onMouseExit.OnNext(default);
+            }
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region method
+
+        protected override void RaiseOnCompletedOnDestroy()
+        {
+            if (onMouseExit != null)
+            {
+                onMouseExit.OnCompleted();
+            }
+        }
+
+        #endregion
+    }
 }
 #endif

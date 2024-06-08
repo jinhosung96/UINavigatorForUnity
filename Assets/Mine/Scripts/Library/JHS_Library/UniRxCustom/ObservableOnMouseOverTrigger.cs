@@ -4,49 +4,52 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-/// <summary>
-/// OnMouseOver에 대한 UniRx Trigger 추가
-/// </summary>
-[DisallowMultipleComponent]
-public class ObservableOnMouseOverTrigger : ObservableTriggerBase
+namespace JHS.Library.UniRxCustom
 {
-    #region variable
-
-    Subject<Unit> onMouseOver;
-
-    #endregion
-
-    #region property
-
-    public IObservable<Unit> OnMouseOverAsObservable()
+    /// <summary>
+    /// OnMouseOver에 대한 UniRx Trigger 추가
+    /// </summary>
+    [DisallowMultipleComponent]
+    public class ObservableOnMouseOverTrigger : ObservableTriggerBase
     {
-        return onMouseOver ??= new Subject<Unit>();
-    }
+        #region variable
 
-    #endregion
+        Subject<Unit> onMouseOver;
 
-    #region unity event
+        #endregion
 
-    void OnMouseOver()
-    {
-        if (onMouseOver != null)
+        #region property
+
+        public IObservable<Unit> OnMouseOverAsObservable()
         {
-            onMouseOver.OnNext(default);
+            return onMouseOver ??= new Subject<Unit>();
         }
-    }
 
-    #endregion
+        #endregion
 
-    #region method
+        #region unity event
 
-    protected override void RaiseOnCompletedOnDestroy()
-    {
-        if (onMouseOver != null)
+        void OnMouseOver()
         {
-            onMouseOver.OnCompleted();
+            if (onMouseOver != null)
+            {
+                onMouseOver.OnNext(default);
+            }
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region method
+
+        protected override void RaiseOnCompletedOnDestroy()
+        {
+            if (onMouseOver != null)
+            {
+                onMouseOver.OnCompleted();
+            }
+        }
+
+        #endregion
+    }
 }
 #endif

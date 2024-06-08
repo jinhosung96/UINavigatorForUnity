@@ -4,50 +4,53 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-/// <summary>
-/// OnMouseDown에 대한 UniRx Trigger 추가
-/// </summary>
-[DisallowMultipleComponent]
-public class ObservableOnMouseDownTrigger : ObservableTriggerBase
+namespace JHS.Library.UniRxCustom
 {
-    #region variable
-
-    private Subject<Unit> onMouseDown;
-
-    #endregion
-
-    #region property
-
-    public IObservable<Unit> OnMouseDownAsObservable()
+    /// <summary>
+    /// OnMouseDown에 대한 UniRx Trigger 추가
+    /// </summary>
+    [DisallowMultipleComponent]
+    public class ObservableOnMouseDownTrigger : ObservableTriggerBase
     {
-        return onMouseDown ??= new Subject<Unit>();
-    }
+        #region variable
 
-    #endregion
+        private Subject<Unit> onMouseDown;
 
-    #region unity event
+        #endregion
 
-    void OnMouseDown()
-    {
-        if (onMouseDown != null)
+        #region property
+
+        public IObservable<Unit> OnMouseDownAsObservable()
         {
-            onMouseDown.OnNext(default);
+            return onMouseDown ??= new Subject<Unit>();
         }
-    }
 
-    #endregion
+        #endregion
 
-    #region method
+        #region unity event
 
-    protected override void RaiseOnCompletedOnDestroy()
-    {
-        if (onMouseDown != null)
+        void OnMouseDown()
         {
-            onMouseDown.OnCompleted();
+            if (onMouseDown != null)
+            {
+                onMouseDown.OnNext(default);
+            }
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region method
+
+        protected override void RaiseOnCompletedOnDestroy()
+        {
+            if (onMouseDown != null)
+            {
+                onMouseDown.OnCompleted();
+            }
+        }
+
+        #endregion
+    }
 }
 
 #endif

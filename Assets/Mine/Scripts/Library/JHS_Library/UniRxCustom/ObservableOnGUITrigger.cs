@@ -6,7 +6,7 @@ using UniRx;
 using UniRx.Triggers;
 
 
-namespace Library.UniRxCustom
+namespace JHS.Library.UniRxCustom
 {
     /// <summary>
     /// OnGUI에 대한 UniRx Trigger 추가

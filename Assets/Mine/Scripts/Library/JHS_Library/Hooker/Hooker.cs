@@ -1,6 +1,6 @@
 using System;
 
-namespace Mine.Code.Framework.Hooker
+namespace JHS.Library.Hooker
 {
     public class ActionHooker
     {

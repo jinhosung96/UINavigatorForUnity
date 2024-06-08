@@ -1,7 +1,7 @@
 using UnityEditor;
-using Debug = Mine.Code.Framework.Util.Debug.Debug;
+using Debug = JHS.Library.Util.Debug.Debug;
 
-namespace Mine.Code.Framework.Editor.RefreshOnPlay
+namespace JHS.Library.Editor.RefreshOnPlay
 {
     [InitializeOnLoad]
     public static class RefreshOnPlay

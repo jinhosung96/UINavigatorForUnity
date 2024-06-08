@@ -1,4 +1,4 @@
-namespace Mine.Code.Framework.Manager.ResourceFactory
+namespace JHS.Library.Manager.ResourceFactory
 {
     public class ResourceFactoryBuilderBase<T> where T : ResourceFactoryBuilderBase<T> 
     {

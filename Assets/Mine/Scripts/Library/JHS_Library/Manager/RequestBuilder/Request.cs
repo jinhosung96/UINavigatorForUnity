@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Mine.Code.Framework.Manager.RequestBuilder
+namespace JHS.Library.Manager.RequestBuilder
 {
     public static class RequestExtensions
     {

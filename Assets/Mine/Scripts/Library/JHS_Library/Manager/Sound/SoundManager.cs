@@ -1,13 +1,13 @@
 #if UNIRX_SUPPORT
 using System;
 using System.Collections.Generic;
-using Mine.Code.Framework.Manager.ResourceFactory;
+using JHS.Library.Manager.ResourceFactory;
 using UniRx;
 using UnityEngine;
 using VContainer.Unity;
 using Object = UnityEngine.Object;
 
-namespace Mine.Code.Framework.Manager.Sound
+namespace JHS.Library.Manager.Sound
 {
     [Serializable]
     public class SoundClip

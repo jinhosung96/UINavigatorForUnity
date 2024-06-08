@@ -3,53 +3,56 @@ using System;
 using UniRx;
 using UnityEngine;
 
-[Serializable]
-public class IntReactivePropertyWithRange : IntReactiveProperty
+namespace JHS.Library.UniRxCustom
 {
-    public int Min { get; }
-    public int Max { get; }
-    
-    public IntReactivePropertyWithRange(int min, int max) : base()
+    [Serializable]
+    public class IntReactivePropertyWithRange : IntReactiveProperty
     {
-        Min = min;
-        Max = max;
-    }
-    
-    public IntReactivePropertyWithRange(int initialValue, int min, int max)
-    {
-        Min = min;
-        Max = max;
-        SetValue(initialValue);
+        public int Min { get; }
+        public int Max { get; }
+
+        public IntReactivePropertyWithRange(int min, int max) : base()
+        {
+            Min = min;
+            Max = max;
+        }
+
+        public IntReactivePropertyWithRange(int initialValue, int min, int max)
+        {
+            Min = min;
+            Max = max;
+            SetValue(initialValue);
+        }
+
+        protected sealed override void SetValue(int value)
+        {
+            base.SetValue(Mathf.Clamp(value, Min, Max));
+        }
     }
 
-    protected sealed override void SetValue(int value)
+    [Serializable]
+    public class FloatReactivePropertyWithRange : FloatReactiveProperty
     {
-        base.SetValue(Mathf.Clamp(value, Min, Max));
-    }
-}
+        public float Min { get; }
+        public float Max { get; }
 
-[Serializable]
-public class FloatReactivePropertyWithRange : FloatReactiveProperty
-{
-    public float Min { get; }
-    public float Max { get; }
-    
-    public FloatReactivePropertyWithRange(float min, float max) : base()
-    {
-        Min = min;
-        Max = max;
-    }
-    
-    public FloatReactivePropertyWithRange(float initialValue, float min, float max)
-    {
-        Min = min;
-        Max = max;
-        SetValue(initialValue);
-    }
+        public FloatReactivePropertyWithRange(float min, float max) : base()
+        {
+            Min = min;
+            Max = max;
+        }
 
-    protected sealed override void SetValue(float value)
-    {
-        base.SetValue(Mathf.Clamp(value, Min, Max));
+        public FloatReactivePropertyWithRange(float initialValue, float min, float max)
+        {
+            Min = min;
+            Max = max;
+            SetValue(initialValue);
+        }
+
+        protected sealed override void SetValue(float value)
+        {
+            base.SetValue(Mathf.Clamp(value, Min, Max));
+        }
     }
 }
 

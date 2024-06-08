@@ -2,7 +2,7 @@
 using System;
 using UniRx;
 
-namespace Mine.Code.Framework.StateMachine
+namespace JHS.Library.StateMachine
 {
     [Serializable]
     public class StateMachine<T> where T : Enum

@@ -4,49 +4,52 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-/// <summary>
-/// OnMouseDrag에 대한 UniRx Trigger 추가
-/// </summary>
-[DisallowMultipleComponent]
-public class ObservableOnMouseDragTrigger : ObservableTriggerBase
+namespace JHS.Library.UniRxCustom
 {
-    #region variable
-
-    Subject<Unit> onMouseDrag;
-
-    #endregion
-
-    #region property
-
-    public IObservable<Unit> OnMouseDragAsObservable()
+    /// <summary>
+    /// OnMouseDrag에 대한 UniRx Trigger 추가
+    /// </summary>
+    [DisallowMultipleComponent]
+    public class ObservableOnMouseDragTrigger : ObservableTriggerBase
     {
-        return onMouseDrag ??= new Subject<Unit>();
-    }
+        #region variable
 
-    #endregion
+        Subject<Unit> onMouseDrag;
 
-    #region unity event
+        #endregion
 
-    void OnMouseDrag()
-    {
-        if (onMouseDrag != null)
+        #region property
+
+        public IObservable<Unit> OnMouseDragAsObservable()
         {
-            onMouseDrag.OnNext(default);
+            return onMouseDrag ??= new Subject<Unit>();
         }
-    }
 
-    #endregion
+        #endregion
 
-    #region method
+        #region unity event
 
-    protected override void RaiseOnCompletedOnDestroy()
-    {
-        if (onMouseDrag != null)
+        void OnMouseDrag()
         {
-            onMouseDrag.OnCompleted();
+            if (onMouseDrag != null)
+            {
+                onMouseDrag.OnNext(default);
+            }
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region method
+
+        protected override void RaiseOnCompletedOnDestroy()
+        {
+            if (onMouseDrag != null)
+            {
+                onMouseDrag.OnCompleted();
+            }
+        }
+
+        #endregion
+    }
 }
 #endif

@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Mine.Code.Framework.Util.Debug
+namespace JHS.Library.Util.Debug
 {
     public static class Debug
     {

@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 #endif
 
-namespace Mine.Code.Framework.Manager.SceneLoader
+namespace JHS.Library.Manager.SceneLoader
 {
     #region Enum
 

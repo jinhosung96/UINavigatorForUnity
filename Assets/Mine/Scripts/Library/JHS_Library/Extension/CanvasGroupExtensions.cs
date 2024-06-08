@@ -2,7 +2,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace Mine.Code.Framework.Extension
+namespace JHS.Library.Extension
 {
     public static class CanvasGroupExtensions
     {
