@@ -1,3 +1,4 @@
+#if UNIRX_SUPPORT && UNITASK_SUPPORT
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -190,3 +191,4 @@ namespace Mine.Code.Framework.Manager.ResourceFactory
         }
     }
 }
+#endif

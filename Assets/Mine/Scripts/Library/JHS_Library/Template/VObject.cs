@@ -1,3 +1,4 @@
+#if VCONTAINER_SUPPORT
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,3 +15,5 @@ public class VObject<T> where T : LifetimeScope
 
     #endregion
 }
+
+#endif

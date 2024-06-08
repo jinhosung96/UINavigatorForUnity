@@ -4,6 +4,8 @@ using UnityEngine.AddressableAssets;
 #if VCONTAINER_SUPPORT
 using VContainer.Unity;
 #endif
+
+#if UNIRX_SUPPORT && UNITASK_SUPPORT
 using System;
 using Cysharp.Threading.Tasks;
 using UniRx;
@@ -171,3 +173,4 @@ namespace Mine.Code.Framework.Manager.ResourceFactory
         }
     }
 }
+#endif
