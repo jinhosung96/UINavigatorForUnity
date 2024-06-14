@@ -1,3 +1,4 @@
+#if ADDRESSABLE_SUPPORT
 using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -9,14 +10,14 @@ using UnityEditor;
 
 namespace JHS.Library.UINavigator.Runtime.Util 
 {
-     /// <summary>
-        /// Creates an AssetReference that is restricted to having a specific Component.
-        /// * This is the class that inherits from AssetReference.  It is generic and does not specify which Components it might care about.  A concrete child of this class is required for serialization to work.* At edit-time it validates that the asset set on it is a GameObject with the required Component.
-        /// * At edit-time it validates that the asset set on it is a GameObject with the required Component.
-        /// * At runtime it can load/instantiate the GameObject, then return the desired component.  API matches base class (LoadAssetAsync & InstantiateAsync).
-        /// </summary>
-        /// <typeparam name="TComponent"> The component type.</typeparam>
-        [Serializable]
+    /// <summary>
+    /// Creates an AssetReference that is restricted to having a specific Component.
+    /// * This is the class that inherits from AssetReference.  It is generic and does not specify which Components it might care about.  A concrete child of this class is required for serialization to work.* At edit-time it validates that the asset set on it is a GameObject with the required Component.
+    /// * At edit-time it validates that the asset set on it is a GameObject with the required Component.
+    /// * At runtime it can load/instantiate the GameObject, then return the desired component.  API matches base class (LoadAssetAsync & InstantiateAsync).
+    /// </summary>
+    /// <typeparam name="TComponent"> The component type.</typeparam>
+    [Serializable]
 
     public class ComponentReference<TComponent> : AssetReference
     {
@@ -78,3 +79,5 @@ namespace JHS.Library.UINavigator.Runtime.Util
     }
 }
 
+
+#endif
