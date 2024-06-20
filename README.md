@@ -1,4 +1,4 @@
-# Morea Library
+# Morae Library
 공용 라이브러리 공유
 
 # 함께 사용되는 에셋 목록
