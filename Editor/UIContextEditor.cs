@@ -1,13 +1,13 @@
 #if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && UNIRX_SUPPORT
 using System;
 using System.Linq;
-using JHS.Library.UINavigator.Runtime.Util;
 using JHS.Library.UINavigator.Runtime;
 using JHS.Library.UINavigator.Runtime.Animation;
+using JHS.Library.UINavigator.Runtime.Util;
 using UnityEditor;
 using UnityEngine;
 
-namespace JHS.Library.Code.Manager.UINavigator.Editor
+namespace JHS.Library.UINavigator.Editor
 {
     [CustomEditor(typeof(UIContext), true)]
     public class UIContextEditor : UnityEditor.Editor

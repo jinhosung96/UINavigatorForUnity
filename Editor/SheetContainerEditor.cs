@@ -5,7 +5,7 @@ using JHS.Library.UINavigator.Runtime.Sheet;
 using UnityEditor;
 using UnityEngine;
 
-namespace JHS.Library.Code.Manager.UINavigator.Editor
+namespace JHS.Library.UINavigator.Editor
 {
     [CustomEditor(typeof(SheetContainer))]
     public class SheetContainerEditor : UIContainerEditor

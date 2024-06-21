@@ -5,7 +5,7 @@ using JHS.Library.UINavigator.Runtime.Modal;
 using UnityEditor;
 using UnityEngine;
 
-namespace JHS.Library.Code.Manager.UINavigator.Editor
+namespace JHS.Library.UINavigator.Editor
 {
     [CustomEditor(typeof(ModalContainer))]
     public class ModalContainerEditor : UIContainerEditor

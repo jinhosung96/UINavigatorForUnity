@@ -2,18 +2,18 @@
 using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using JHS.Library.UINavigator.Runtime.Util;
 using JHS.Library.UINavigator.Runtime;
 using JHS.Library.UINavigator.Runtime.Animation;
 using JHS.Library.UINavigator.Runtime.Modal;
 using JHS.Library.UINavigator.Runtime.Page;
 using JHS.Library.UINavigator.Runtime.Sheet;
+using JHS.Library.UINavigator.Runtime.Util;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-namespace JHS.Library.Code.Manager.UINavigator.Editor
+namespace JHS.Library.UINavigator.Editor
 {
     [CustomEditor(typeof(UIContainer), true)]
     public class UIContainerEditor : UnityEditor.Editor
