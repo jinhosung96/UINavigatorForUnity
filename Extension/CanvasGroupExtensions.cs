@@ -2,7 +2,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace JHS.Library.Extension
+namespace MoraeGames.Library.Extension
 {
     public static class CanvasGroupExtensions
     {

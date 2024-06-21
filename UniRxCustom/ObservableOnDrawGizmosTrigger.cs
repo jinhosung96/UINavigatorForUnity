@@ -4,7 +4,7 @@ using System;
 using UniRx;
 using UniRx.Triggers;
 
-namespace JHS.Library.UniRxCustom
+namespace MoraeGames.Library.UniRxCustom
 {
     /// <summary>
     /// OnDrawGizmos�� ���� UniRx Trigger �߰�

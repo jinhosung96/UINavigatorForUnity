@@ -2,7 +2,7 @@
 using Photon.Pun;
 using System.Collections.Generic;
 
-namespace JHS.Library.Other
+namespace MoraeGames.Library.Other
 {
     public class PunObject<T> : MonoBehaviourPun, IPunInstantiateMagicCallback where T : PunObject<T>
     {

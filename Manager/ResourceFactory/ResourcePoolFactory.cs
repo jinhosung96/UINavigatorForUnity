@@ -8,7 +8,7 @@ using UniRx.Triggers;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace JHS.Library.Manager.ResourceFactory
+namespace MoraeGames.Library.Manager.ResourceFactory
 {
     public class ResourcePoolFactory<T> : ResourceFactory<T>, IDisposable where T : Object
     {

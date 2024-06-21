@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace JHS.Library.View
+namespace MoraeGames.Library.View
 {
     public class SliderView : MonoBehaviour
     {

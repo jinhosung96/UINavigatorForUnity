@@ -3,7 +3,7 @@ using System;
 using UniRx;
 using UnityEngine;
 
-namespace JHS.Library.UniRxCustom
+namespace MoraeGames.Library.UniRxCustom
 {
     [Serializable]
     public class IntReactivePropertyWithRange : IntReactiveProperty

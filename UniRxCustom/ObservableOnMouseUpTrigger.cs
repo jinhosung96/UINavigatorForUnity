@@ -4,7 +4,7 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-namespace JHS.Library.UniRxCustom
+namespace MoraeGames.Library.UniRxCustom
 {
     /// <summary>
     /// OnMouseUp에 대한 UniRx Trigger 추가

@@ -3,7 +3,7 @@ using System;
 using UniRx;
 using UnityEngine;
 
-namespace JHS.Library.Other
+namespace MoraeGames.Library.Other
 {
     public class AnimationEventReceiver : MonoBehaviour
     {

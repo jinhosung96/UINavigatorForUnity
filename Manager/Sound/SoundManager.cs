@@ -1,13 +1,13 @@
 #if UNIRX_SUPPORT
 using System;
 using System.Collections.Generic;
-using JHS.Library.Manager.ResourceFactory;
+using MoraeGames.Library.Manager.ResourceFactory;
 using UniRx;
 using UnityEngine;
 using VContainer.Unity;
 using Object = UnityEngine.Object;
 
-namespace JHS.Library.Manager.Sound
+namespace MoraeGames.Library.Manager.Sound
 {
     [Serializable]
     public class SoundClip

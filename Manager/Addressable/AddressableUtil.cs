@@ -9,7 +9,7 @@ using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
-namespace JHS.Library.Manager.Addressable
+namespace MoraeGames.Library.Manager.Addressable
 {
     public static class AddressableUtil
     {

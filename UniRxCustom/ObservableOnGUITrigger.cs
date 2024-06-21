@@ -6,7 +6,7 @@ using UniRx;
 using UniRx.Triggers;
 
 
-namespace JHS.Library.UniRxCustom
+namespace MoraeGames.Library.UniRxCustom
 {
     /// <summary>
     /// OnGUI에 대한 UniRx Trigger 추가

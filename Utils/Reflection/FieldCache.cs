@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
-namespace JHS.Library.Util.Reflection
+namespace MoraeGames.Library.Util.Reflection
 {
     // Type을 키 값으로 FieldInfo를 캐싱하는 클래스
     public static class FieldCache

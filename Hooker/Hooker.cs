@@ -1,6 +1,6 @@
 using System;
 
-namespace JHS.Library.Hooker
+namespace MoraeGames.Library.Hooker
 {
     public class ActionHooker
     {

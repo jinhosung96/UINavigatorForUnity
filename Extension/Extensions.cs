@@ -1,7 +1,6 @@
 ﻿#if UNIRX_SUPPORT
 using UniRx;
 using UniRx.Triggers;
-using JHS.Library.UniRxCustom;
 #endif
 using System;
 using System.Collections.Generic;
@@ -15,9 +14,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Cysharp.Threading.Tasks;
 #endif
 using UnityEngine.UI;
-using JHS.Library.Lifecycle;
+using MoraeGames.Library.Lifecycle;
+using MoraeGames.Library.UniRxCustom;
 
-namespace JHS.Library.Extension
+namespace MoraeGames.Library.Extension
 {
     /// <summary>
     /// 확장 메소드 정의

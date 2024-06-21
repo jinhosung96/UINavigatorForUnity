@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityNative.Toasts;
 
-namespace JHS.Library.Manager.Toast
+namespace MoraeGames.Library.Manager.Toast
 {
     /// <summary> 안드로이드 토스트 메시지 표시 싱글톤 </summary>
     public class ToastManager : MonoBehaviour

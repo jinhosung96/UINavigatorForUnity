@@ -11,7 +11,7 @@ using Pun2Task;
 using Cysharp.Threading.Tasks;
 using System;
 
-namespace JHS.Library.Manager.Photon
+namespace MoraeGames.Library.Manager.Photon
 {
     /// <summary>
     /// Photon에 대한 기능 정의, Photon Callback들에 대한 UniRx 기반 Observable 제공

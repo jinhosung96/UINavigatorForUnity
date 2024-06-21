@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace JHS.Library.Manager.Coroutine
+namespace MoraeGames.Library.Manager.Coroutine
 {
     public class CoroutineManager
     {

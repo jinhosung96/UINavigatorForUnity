@@ -1,9 +1,9 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
-using Debug = JHS.Library.Util.Debug.Debug;
+using Debug = MoraeGames.Library.Util.Debug.Debug;
 
-namespace JHS.Library.Editor.CopySelectFileGUID
+namespace MoraeGames.Library.Editor.CopySelectFileGUID
 {
     public class CopySelectFileGuid : EditorWindow
     {
@@ -13,7 +13,7 @@ namespace JHS.Library.Editor.CopySelectFileGUID
             if (Selection.assetGUIDs.Length > 0)
             {
                 string selectedGUID = Selection.assetGUIDs[0];
-                Debug.Log($"Selected asset GUID : {selectedGUID}");
+                Util.Debug.Debug.Log($"Selected asset GUID : {selectedGUID}");
                 TextEditor textEditor = new UnityEngine.TextEditor();
                 textEditor.text = selectedGUID;
                 textEditor.SelectAll();
@@ -21,7 +21,7 @@ namespace JHS.Library.Editor.CopySelectFileGUID
             }
             else
             {
-                Debug.LogWarning("No asset selected");
+                Util.Debug.Debug.LogWarning("No asset selected");
             }
         }
     }

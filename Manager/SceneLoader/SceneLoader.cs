@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 #endif
 
-namespace JHS.Library.Manager.SceneLoader
+namespace MoraeGames.Library.Manager.SceneLoader
 {
     #region Enum
 

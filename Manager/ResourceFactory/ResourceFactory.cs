@@ -13,7 +13,7 @@ using UniRx.Triggers;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace JHS.Library.Manager.ResourceFactory
+namespace MoraeGames.Library.Manager.ResourceFactory
 {
     public class ResourceFactory<T> where T : Object
     {

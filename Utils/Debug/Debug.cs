@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace JHS.Library.Util.Debug
+namespace MoraeGames.Library.Util.Debug
 {
     public static class Debug
     {

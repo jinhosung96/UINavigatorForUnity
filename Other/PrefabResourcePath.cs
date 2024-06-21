@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace JHS.Library.Other
+namespace MoraeGames.Library.Other
 {
     public class PrefabResourcePath : MonoBehaviour
     {

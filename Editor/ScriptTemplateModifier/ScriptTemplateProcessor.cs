@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-namespace JHS.Library.Editor.ScriptTemplateModifier
+namespace MoraeGames.Library.Editor.ScriptTemplateModifier
 {
     public sealed class ScriptTemplateProcessor : AssetModificationProcessor
     {

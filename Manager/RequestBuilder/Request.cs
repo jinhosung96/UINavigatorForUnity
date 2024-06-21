@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace JHS.Library.Manager.RequestBuilder
+namespace MoraeGames.Library.Manager.RequestBuilder
 {
     public static class RequestExtensions
     {

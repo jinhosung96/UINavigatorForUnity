@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace JHS.Library.Editor.PlayerPrefsUtility
+namespace MoraeGames.Library.Editor.PlayerPrefsUtility
 {
     public class PlayerPrefsUtility
     {

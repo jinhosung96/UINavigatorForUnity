@@ -1,7 +1,8 @@
+using MoraeGames.Library.Util.Debug;
 using UnityEditor;
-using Debug = JHS.Library.Util.Debug.Debug;
+using Debug = MoraeGames.Library.Util.Debug.Debug;
 
-namespace JHS.Library.Editor.RefreshOnPlay
+namespace MoraeGames.Library.Editor.RefreshOnPlay
 {
     [InitializeOnLoad]
     public static class RefreshOnPlay

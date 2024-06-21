@@ -7,7 +7,7 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 
-namespace JHS.Library.StateMachine
+namespace MoraeGames.Library.StateMachine
 {
     /// <summary>
     /// State Machine 애니메이션 동작에 있어 활용하면 좋을 것 같다.

@@ -2,7 +2,7 @@
 using System;
 using UniRx;
 
-namespace JHS.Library.StateMachine
+namespace MoraeGames.Library.StateMachine
 {
     [Serializable]
     public class StateMachine<T> where T : Enum

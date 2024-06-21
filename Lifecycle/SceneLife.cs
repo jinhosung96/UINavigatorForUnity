@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace JHS.Library.Lifecycle
+namespace MoraeGames.Library.Lifecycle
 {
     public sealed class SceneLife : MonoBehaviour
     {

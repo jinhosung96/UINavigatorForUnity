@@ -6,7 +6,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-namespace JHS.Library.Template
+namespace MoraeGames.Library.Template
 {
     public class VObject<T> where T : LifetimeScope
     {
