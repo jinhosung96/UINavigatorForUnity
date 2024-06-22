@@ -9,7 +9,7 @@ namespace MoraeGames.Library.Status
 
     public class IntAbilityProperty
     {
-        [field: SerializeField] public int BaseValue { get; private set; }
+        [field: SerializeField] public int BaseValue { get; set; }
         public int Value => (int)((BaseValue + AdditionEffects.Select(buff => buff.Value).Sum()) * MultiplicationEffects.Select(buff => 1 + buff.Value).Aggregate(1f, (a, b) => a * b));
         public List<IntAbilityEffect> AdditionEffects { get; } = new();
         public List<IntAbilityEffect> MultiplicationEffects { get; } = new();
@@ -20,7 +20,7 @@ namespace MoraeGames.Library.Status
     [Serializable]
     public class FloatAbilityProperty
     {
-        [field: SerializeField] public float BaseValue { get; private set; }
+        [field: SerializeField] public float BaseValue { get; set; }
         public float Value => (BaseValue + AdditionEffects.Select(buff => buff.Value).Sum()) * MultiplicationEffects.Select(buff => 1 + buff.Value).Aggregate(1f, (a, b) => a * b);
 
         public List<FloatAbilityEffect> AdditionEffects { get; } = new();
@@ -31,7 +31,7 @@ namespace MoraeGames.Library.Status
 
     public class ToggleAbilityProperty
     {
-        [field: SerializeField] public bool BaseValue { get; private set; }
+        [field: SerializeField] public bool BaseValue { get; set; }
         public bool Value => Effects.Any() ? !BaseValue : BaseValue;
         public List<ToggleAbilityEffect> Effects { get; } = new();
         public ToggleAbilityProperty(bool baseValue) => BaseValue = baseValue;

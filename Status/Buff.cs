@@ -8,9 +8,9 @@ namespace MoraeGames.Library.Status
     public class IntAbilityEffect
     {
         [field: SerializeField] public int Id { get; private set; }
-        [field: SerializeField] public int Value { get; private set; }
+        [field: SerializeField] public float Value { get; private set; }
 
-        public IntAbilityEffect(int id, int value)
+        public IntAbilityEffect(int id, float value)
         {
             Id = id;
             Value = value;
