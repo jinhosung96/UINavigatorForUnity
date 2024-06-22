@@ -17,7 +17,7 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             var className = Path.GetFileNameWithoutExtension(scriptPath);
             var extname = Path.GetExtension(scriptPath);
             var fullPath = Path.Combine(Application.dataPath, scriptPath.Substring("Assets/".Length));
-            var namespacePath = scriptPath.Substring(0, scriptPath.Length - 3).Substring("Assets/".Length).Replace(".", "").Replace("/", ".").Replace("#", "");
+            var namespacePath = scriptPath.Substring(0, scriptPath.Length - className.Length - 4).Substring("Assets/".Length).Replace(".", "").Replace("/", ".").Replace("#", "");
             namespacePath = Regex.Replace(namespacePath, @"[0-9]", "");
             
             if (extname != ".cs") return;
