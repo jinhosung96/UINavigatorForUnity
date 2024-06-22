@@ -40,6 +40,7 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             else if (scriptName.EndsWith("View")) templatePath = AssetDatabase.GUIDToAssetPath("1311c83fd8deab645a38c59b3759cf71");
             else if (scriptName.EndsWith("Presenter")) templatePath = AssetDatabase.GUIDToAssetPath("b9b5b34cecdd1284f88a5ffbbd408f40");
             else if (scriptName.EndsWith("ScriptableObject") || scriptName.EndsWith("SO") || scriptName.EndsWith("Setting")) templatePath = AssetDatabase.GUIDToAssetPath("02e9f3b7e4db83249bb3b60ea3362e9f");
+            else templatePath = AssetDatabase.GUIDToAssetPath("761127faa8d628c4d84b14bd7e5e9392");
 
             if (templatePath == default) return;
 

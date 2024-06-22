@@ -1,8 +1,9 @@
+using MoraeGames.Library.Template;
 using VContainer.Unity;
 
 namespace #NAMESPACE#
 {
-    public class #FOLDERNAME#Presenter : IStartable
+    public class #FOLDERNAME#Presenter : VObject<#FOLDERNAME#Context>, IStartable
     {
         #region EntryPoint
     
