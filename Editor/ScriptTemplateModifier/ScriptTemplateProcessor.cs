@@ -21,8 +21,9 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             var scriptName = Path.GetFileNameWithoutExtension(scriptPath);
             var extname = Path.GetExtension(scriptPath);
             var fullPath = Path.Combine(Application.dataPath, scriptPath.Substring("Assets/".Length));
-            var folderName = new DirectoryInfo(fullPath.Substring(0, scriptName.Length - 4)).Name;
-            var namespacePath = scriptPath.Substring("Assets/".Length, scriptPath.Length - "Assets/".Length - scriptName.Length - 4)
+            var folderPath = Path.GetDirectoryName(fullPath);
+            var folderName = new DirectoryInfo(folderPath).Name;
+            var namespacePath = scriptPath.Substring("Assets/".Length, scriptPath.Length - "Assets/".Length - scriptName.Length - extname.Length - 1)
                 .Replace(".", "")
                 .Replace("/", ".")
                 .Replace("#", "")
