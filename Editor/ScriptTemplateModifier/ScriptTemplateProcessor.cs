@@ -8,12 +8,8 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
 {
     public sealed class ScriptTemplateProcessor : AssetModificationProcessor
     {
-        static bool isCreatingMVP;
-        
         public static void OnWillCreateAsset(string metaPath)
         {
-            if (isCreatingMVP) return;  
-            
             var suffixIndex = metaPath.LastIndexOf(".meta");
             if (suffixIndex < 0) return;
 
@@ -56,8 +52,6 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
         [MenuItem("Assets/Create/CreateMVP", false, 0)]
         static void CreateMVP()
         {
-            isCreatingMVP = true;
-            
             string folderPath = GetSelectedPathOrFallback();
             string folderName = new DirectoryInfo(folderPath).Name;
 
@@ -65,10 +59,8 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             CreateScript(folderPath, folderName, "Model", File.ReadAllText(AssetDatabase.GUIDToAssetPath("bf4ef348ff43b3f4b83b965604a2c81d")));
             CreateScript(folderPath, folderName, "View", File.ReadAllText(AssetDatabase.GUIDToAssetPath("c0f71e86efe9ac2458ecf50718284a9f")));
             CreateScript(folderPath, folderName, "Presenter", File.ReadAllText(AssetDatabase.GUIDToAssetPath("b3613ac5dd2f4aa4c8cf6907ab6ebb0e")));
-            
-            AssetDatabase.Refresh();
 
-            isCreatingMVP = false;
+            AssetDatabase.Refresh();
         }
 
         static string GetSelectedPathOrFallback()
