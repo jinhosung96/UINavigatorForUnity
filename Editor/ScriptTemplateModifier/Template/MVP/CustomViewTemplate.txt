@@ -1,0 +1,10 @@
+namespace #NAMESPACE#
+{
+    [System.Serializable]
+    public class #SCRIPTNAME#
+    {
+        #region Properties
+    
+        #endregion
+    }
+}

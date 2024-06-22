@@ -1,0 +1,27 @@
+using UnityEngine;
+using VContainer;
+using VContainer.Unity;
+
+namespace #NAMESPACE#
+{
+    public class #FOLDERNAME#Context : LifetimeScope
+    {
+        #region Properties
+        
+        [field: SerializeField] public #FOLDERNAME#Model Model { get; private set; }
+        [field: SerializeField] public #FOLDERNAME#View View { get; private set; }
+        
+        #endregion
+        
+        #region Override Methods
+        
+        protected override void Configure(IContainerBuilder builder)
+        {
+            builder.RegisterInstance(Model);
+            builder.RegisterInstance(View);
+            builder.RegisterEntryPoint<#FOLDERNAME#Presenter>();
+        }
+            
+        #endregion
+    }
+}

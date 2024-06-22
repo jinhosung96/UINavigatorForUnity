@@ -1,10 +1,10 @@
-using Mine.Code.Framework.Manager.UINavigator.Runtime.Modal;
+using JHS.Library.UINavigator.Runtime.Sheet;
 using UnityEngine;
 using VContainer;
 
 namespace #NAMESPACE#
 {
-    public class #SCRIPTNAME# : Modal
+    public class #SCRIPTNAME# : Sheet
     {
         #region Inner Classes
 

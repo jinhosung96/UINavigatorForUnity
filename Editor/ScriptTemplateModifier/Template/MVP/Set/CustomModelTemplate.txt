@@ -1,0 +1,10 @@
+namespace #NAMESPACE#
+{
+    [System.Serializable]
+    public class #FOLDERNAME#Model
+    {
+        #region Properties
+    
+        #endregion
+    }
+}

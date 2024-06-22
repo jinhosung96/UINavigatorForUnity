@@ -1,0 +1,27 @@
+using UnityEngine;
+using VContainer;
+using VContainer.Unity;
+
+namespace #NAMESPACE#
+{
+    public class #SCRIPTNAME# : LifetimeScope
+    {
+        #region Properties
+                
+        // [field: SerializeField] public XModel Model { get; private set; }
+        // [field: SerializeField] public XView View { get; private set; }
+        
+        #endregion
+        
+        #region Override Methods
+        
+        protected override void Configure(IContainerBuilder builder)
+        {
+            // builder.RegisterInstance(Model);
+            // builder.RegisterInstance(View);
+            // builder.RegisterEntryPoint<XPresenter>();
+        }
+            
+        #endregion
+    }
+}
