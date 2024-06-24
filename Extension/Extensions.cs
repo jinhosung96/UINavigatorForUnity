@@ -15,7 +15,9 @@ using Cysharp.Threading.Tasks;
 #endif
 using UnityEngine.UI;
 using MoraeGames.Library.Lifecycle;
+#if UNIRX_SUPPORT
 using MoraeGames.Library.UniRxCustom;
+#endif
 
 namespace MoraeGames.Library.Extension
 {

@@ -1,10 +1,10 @@
-using Mine.Code.Framework.Manager.UINavigator.Runtime.Page;
+using JHS.Library.UINavigator.Runtime.Modal;
 using UnityEngine;
 using VContainer;
 
 namespace #NAMESPACE#
 {
-    public class #SCRIPTNAME# : Page
+    public class #SCRIPTNAME# : Modal
     {
         #region Inner Classes
 
