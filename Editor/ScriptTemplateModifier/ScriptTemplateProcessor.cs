@@ -1,19 +1,33 @@
 #if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
+#if CSV_HELPER_SUPPORT
+using CsvHelper;
+using CsvHelper.Configuration;
+#endif
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MoraeGames.Library.Editor.ScriptTemplateModifier
 {
     public sealed class ScriptTemplateProcessor : AssetModificationProcessor
     {
-        static bool isCreatingMVP;
-        
+        #region Fields
+
+        static bool isProcessing;
+
+        #endregion
+
+        #region Unity Events
+
         public static void OnWillCreateAsset(string metaPath)
         {
-            if (isCreatingMVP) return;  
-            
+            if (isProcessing) return;
+
             var suffixIndex = metaPath.LastIndexOf(".meta");
             if (suffixIndex < 0) return;
 
@@ -22,56 +36,99 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             var extname = Path.GetExtension(scriptPath);
             var fullPath = Path.Combine(Application.dataPath, scriptPath.Substring("Assets/".Length));
             var folderPath = Path.GetDirectoryName(fullPath);
-            var folderName = new DirectoryInfo(folderPath).Name;
-            var namespacePath = scriptPath.Substring("Assets/".Length, scriptPath.Length - "Assets/".Length - scriptName.Length - extname.Length - 1)
-                .Replace(".", "")
-                .Replace("/", ".")
-                .Replace("#", "")
-                .Replace(@"[0-9]", "");
 
             if (extname != ".cs") return;
-
-            string templatePath = default;
-
-            if (scriptName.EndsWith("Sheet")) templatePath = AssetDatabase.GUIDToAssetPath("b856b5b54f16f2e43abd3421aa7a741f");
-            else if (scriptName.EndsWith("Page")) templatePath = AssetDatabase.GUIDToAssetPath("ea76c5002baf9544587bbc93d5ddb9ce");
-            else if (scriptName.EndsWith("Modal")) templatePath = AssetDatabase.GUIDToAssetPath("4f88545e18c7b3a45a6137fa869becbb");
-            else if (scriptName.EndsWith("Context")) templatePath = AssetDatabase.GUIDToAssetPath("51527f30dfa70604889a867d1d1755c0");
-            else if (scriptName.EndsWith("Model")) templatePath = AssetDatabase.GUIDToAssetPath("8c7716432fa40a74c83a4a9b5da0336c");
-            else if (scriptName.EndsWith("View")) templatePath = AssetDatabase.GUIDToAssetPath("1311c83fd8deab645a38c59b3759cf71");
-            else if (scriptName.EndsWith("Presenter")) templatePath = AssetDatabase.GUIDToAssetPath("b9b5b34cecdd1284f88a5ffbbd408f40");
-            else if (scriptName.EndsWith("ScriptableObject") || scriptName.EndsWith("SO") || scriptName.EndsWith("Setting")) templatePath = AssetDatabase.GUIDToAssetPath("02e9f3b7e4db83249bb3b60ea3362e9f");
-            else templatePath = AssetDatabase.GUIDToAssetPath("761127faa8d628c4d84b14bd7e5e9392");
-
-            if (templatePath == default) return;
-
-            string template = File.ReadAllText(templatePath);
-
-            template = template.Replace("#NAMESPACE#", namespacePath);
-            template = template.Replace("#SCRIPTNAME#", scriptName);
-            template = template.Replace("#FOLDERNAME#", folderName);
-            template = template.Replace("#NOTRIM#", "");
-            File.WriteAllText(fullPath, template);
+            
+            if (scriptName.EndsWith("Sheet")) CreateScript(folderPath, scriptName, "20352736d22781c438616f0745b9f902", true);
+            else if (scriptName.EndsWith("Page")) CreateScript(folderPath, scriptName, "ea76c5002baf9544587bbc93d5ddb9ce", true);
+            else if (scriptName.EndsWith("Modal")) CreateScript(folderPath, scriptName, "4f88545e18c7b3a45a6137fa869becbb", true);
+            else if (scriptName.EndsWith("Context")) CreateScript(folderPath, scriptName, "51527f30dfa70604889a867d1d1755c0", true);
+            else if (scriptName.EndsWith("Model")) CreateScript(folderPath, scriptName, "8c7716432fa40a74c83a4a9b5da0336c", true);
+            else if (scriptName.EndsWith("View")) CreateScript(folderPath, scriptName, "1311c83fd8deab645a38c59b3759cf71", true);
+            else if (scriptName.EndsWith("Presenter")) CreateScript(folderPath, scriptName, "b9b5b34cecdd1284f88a5ffbbd408f40", true);
+            else if (scriptName.EndsWith("ScriptableObject") || scriptName.EndsWith("SO") || scriptName.EndsWith("Setting")) CreateScript(folderPath, scriptName, "02e9f3b7e4db83249bb3b60ea3362e9f", true);
+            else CreateScript(folderPath, scriptName, "761127faa8d628c4d84b14bd7e5e9392", true);
+            
             AssetDatabase.Refresh();
         }
 
-        [MenuItem("Assets/Create/CreateMVP", false, 0)]
+        #endregion
+
+        #region Menu Items
+
+        [MenuItem("Assets/Create/Generate MVP Class", false, 0)]
         static void CreateMVP()
         {
-            isCreatingMVP = true;
-            
+            isProcessing = true;
+
             string folderPath = GetSelectedPathOrFallback();
             string folderName = new DirectoryInfo(folderPath).Name;
 
-            CreateScript(folderPath, folderName, "Context", File.ReadAllText(AssetDatabase.GUIDToAssetPath("e49e02b5517aba148b70f7d44d5406be")));
-            CreateScript(folderPath, folderName, "Model", File.ReadAllText(AssetDatabase.GUIDToAssetPath("bf4ef348ff43b3f4b83b965604a2c81d")));
-            CreateScript(folderPath, folderName, "View", File.ReadAllText(AssetDatabase.GUIDToAssetPath("c0f71e86efe9ac2458ecf50718284a9f")));
-            CreateScript(folderPath, folderName, "Presenter", File.ReadAllText(AssetDatabase.GUIDToAssetPath("b3613ac5dd2f4aa4c8cf6907ab6ebb0e")));
-            
+            CreateScript(folderPath, $"{folderName}Context", "e49e02b5517aba148b70f7d44d5406be", false, ("#FOLDERNAME#", folderName));
+            CreateScript(folderPath, $"{folderName}Model", "bf4ef348ff43b3f4b83b965604a2c81d", false, ("#FOLDERNAME#", folderName));
+            CreateScript(folderPath, $"{folderName}View", "c0f71e86efe9ac2458ecf50718284a9f", false, ("#FOLDERNAME#", folderName));
+            CreateScript(folderPath, $"{folderName}Presenter", "b3613ac5dd2f4aa4c8cf6907ab6ebb0e", false, ("#FOLDERNAME#", folderName));
+
             AssetDatabase.Refresh();
 
-            isCreatingMVP = false;
+            isProcessing = false;
         }
+
+#if CSV_HELPER_SUPPORT
+        [MenuItem("Assets/Create/Generate C# Class from CSV", true)]
+        static bool ValidateGetHeaders()
+        {
+            var selected = Selection.activeObject;
+            return selected != null && AssetDatabase.GetAssetPath(selected).EndsWith(".csv");
+        }
+
+        [MenuItem("Assets/Create/Generate C# Class from CSV", false, 0)]
+        static void GenerateClass()
+        {
+            isProcessing = true;
+
+            var csvPath = AssetDatabase.GetAssetPath(Selection.activeObject);
+            var scriptName = $"{Path.GetFileNameWithoutExtension(csvPath)}Row";
+            var folderPath = Path.GetDirectoryName(csvPath);
+
+            if (string.IsNullOrEmpty(csvPath))
+            {
+                Debug.LogError("Invalid CSV file path.");
+                return;
+            }
+
+            string csvText = File.ReadAllText(csvPath);
+
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                NewLine = Environment.NewLine,
+                ShouldSkipRecord = record => record.Row.Parser.Record![0].StartsWith("#") || string.IsNullOrWhiteSpace(record.Row.Parser.Record[0])
+            };
+
+            using var reader = new StringReader(csvText);
+            using var csv = new CsvReader(reader, config);
+
+            csv.Read();
+            csv.ReadHeader();
+            var headers = csv.HeaderRecord;
+
+            CreateScript(
+                folderPath,
+                scriptName,
+                "20352736d22781c438616f0745b9f902",
+                false,
+                ("#ROWS#", string.Join("\n", headers.Select(header => $"       public string {header} {{ get; set; }}")))
+            );
+
+            AssetDatabase.Refresh();
+
+            isProcessing = false;
+        }
+#endif
+
+        #endregion
+
+        #region Private Methods
 
         static string GetSelectedPathOrFallback()
         {
@@ -90,31 +147,45 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             return path;
         }
 
-        static void CreateScript(string folderPath, string folderName, string suffixName, string template)
+        static void CreateScript(string folderPath, string scriptName, string templateGuid, bool isReplace = false, params (string oldValue, string newValue)[] replacements)
         {
-            string scriptName = $"{folderName}{suffixName}";
             string scriptPath = Path.Combine(folderPath, $"{scriptName}.cs");
-            var namespacePath = folderPath.Substring("Assets/".Length)
-                .Replace(".", "")
-                .Replace("/", ".")
-                .Replace("#", "")
-                .Replace(@"[0-9]", "");
-            
-            if (!File.Exists(scriptPath))
+            var namespacePath = GetNamespacePath(folderPath);
+            string template = File.ReadAllText(AssetDatabase.GUIDToAssetPath(templateGuid));
+
+            if (isReplace || !File.Exists(scriptPath))
             {
                 template = template.Replace("#NAMESPACE#", namespacePath);
                 template = template.Replace("#SCRIPTNAME#", scriptName);
-                template = template.Replace("#FOLDERNAME#", folderName);
                 template = template.Replace("#NOTRIM#", "");
+                foreach (var r in replacements) template = template.Replace(r.oldValue, r.newValue);
                 File.WriteAllText(scriptPath, template);
-                
-                Debug.Log($"{folderName + suffixName} script created at {scriptPath}");
-            }
-            else
-            {
-                Debug.LogWarning($"{folderName + suffixName} script already exists at {scriptPath}");
             }
         }
+
+        static string GetNamespacePath(string folderPath)
+        {
+            return folderPath.Substring("Assets/".Length)
+                .Replace(".", "")
+                .Replace("/", ".")
+                .Replace("\\", ".")
+                .Replace("#", "")
+                .Replace(@"[0-9]", "");
+        }
+
+        static string MakeValidPropertyName(string header)
+        {
+            // Replace invalid characters with underscores and capitalize the first letter
+            string validName = header.Replace(" ", "_").Replace("-", "_");
+            if (char.IsDigit(validName[0]))
+            {
+                validName = "_" + validName;
+            }
+
+            return validName;
+        }
+
+        #endregion
     }
 }
 #endif
