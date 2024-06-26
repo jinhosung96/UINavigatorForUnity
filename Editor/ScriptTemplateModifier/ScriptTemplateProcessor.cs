@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -34,20 +33,19 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             var scriptPath = metaPath.Substring(0, suffixIndex);
             var scriptName = Path.GetFileNameWithoutExtension(scriptPath);
             var extname = Path.GetExtension(scriptPath);
-            var fullPath = Path.Combine(Application.dataPath, scriptPath.Substring("Assets/".Length));
-            var folderPath = Path.GetDirectoryName(fullPath);
+            var folderPath = Path.GetDirectoryName(scriptPath);
 
             if (extname != ".cs") return;
             
-            if (scriptName.EndsWith("Sheet")) CreateScript(folderPath, scriptName, "20352736d22781c438616f0745b9f902", true);
-            else if (scriptName.EndsWith("Page")) CreateScript(folderPath, scriptName, "ea76c5002baf9544587bbc93d5ddb9ce", true);
-            else if (scriptName.EndsWith("Modal")) CreateScript(folderPath, scriptName, "4f88545e18c7b3a45a6137fa869becbb", true);
-            else if (scriptName.EndsWith("Context")) CreateScript(folderPath, scriptName, "51527f30dfa70604889a867d1d1755c0", true);
-            else if (scriptName.EndsWith("Model")) CreateScript(folderPath, scriptName, "8c7716432fa40a74c83a4a9b5da0336c", true);
-            else if (scriptName.EndsWith("View")) CreateScript(folderPath, scriptName, "1311c83fd8deab645a38c59b3759cf71", true);
-            else if (scriptName.EndsWith("Presenter")) CreateScript(folderPath, scriptName, "b9b5b34cecdd1284f88a5ffbbd408f40", true);
-            else if (scriptName.EndsWith("ScriptableObject") || scriptName.EndsWith("SO") || scriptName.EndsWith("Setting")) CreateScript(folderPath, scriptName, "02e9f3b7e4db83249bb3b60ea3362e9f", true);
-            else CreateScript(folderPath, scriptName, "761127faa8d628c4d84b14bd7e5e9392", true);
+            if (scriptName.EndsWith("Sheet")) GenerateScript(folderPath, scriptName, "20352736d22781c438616f0745b9f902", true);
+            else if (scriptName.EndsWith("Page")) GenerateScript(folderPath, scriptName, "ea76c5002baf9544587bbc93d5ddb9ce", true);
+            else if (scriptName.EndsWith("Modal")) GenerateScript(folderPath, scriptName, "4f88545e18c7b3a45a6137fa869becbb", true);
+            else if (scriptName.EndsWith("Context")) GenerateScript(folderPath, scriptName, "51527f30dfa70604889a867d1d1755c0", true);
+            else if (scriptName.EndsWith("Model")) GenerateScript(folderPath, scriptName, "8c7716432fa40a74c83a4a9b5da0336c", true);
+            else if (scriptName.EndsWith("View")) GenerateScript(folderPath, scriptName, "1311c83fd8deab645a38c59b3759cf71", true);
+            else if (scriptName.EndsWith("Presenter")) GenerateScript(folderPath, scriptName, "b9b5b34cecdd1284f88a5ffbbd408f40", true);
+            else if (scriptName.EndsWith("ScriptableObject") || scriptName.EndsWith("SO") || scriptName.EndsWith("Setting")) GenerateScript(folderPath, scriptName, "02e9f3b7e4db83249bb3b60ea3362e9f", true);
+            else GenerateScript(folderPath, scriptName, "761127faa8d628c4d84b14bd7e5e9392", true);
             
             AssetDatabase.Refresh();
         }
@@ -57,17 +55,17 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
         #region Menu Items
 
         [MenuItem("Assets/Create/Generate MVP Class", false, 0)]
-        static void CreateMVP()
+        static void GenerateMVP()
         {
             isProcessing = true;
 
             string folderPath = GetSelectedPathOrFallback();
             string folderName = new DirectoryInfo(folderPath).Name;
 
-            CreateScript(folderPath, $"{folderName}Context", "e49e02b5517aba148b70f7d44d5406be", false, ("#FOLDERNAME#", folderName));
-            CreateScript(folderPath, $"{folderName}Model", "bf4ef348ff43b3f4b83b965604a2c81d", false, ("#FOLDERNAME#", folderName));
-            CreateScript(folderPath, $"{folderName}View", "c0f71e86efe9ac2458ecf50718284a9f", false, ("#FOLDERNAME#", folderName));
-            CreateScript(folderPath, $"{folderName}Presenter", "b3613ac5dd2f4aa4c8cf6907ab6ebb0e", false, ("#FOLDERNAME#", folderName));
+            GenerateScript(folderPath, $"{folderName}Context", "e49e02b5517aba148b70f7d44d5406be", false, ("#FOLDERNAME#", folderName));
+            GenerateScript(folderPath, $"{folderName}Model", "bf4ef348ff43b3f4b83b965604a2c81d", false, ("#FOLDERNAME#", folderName));
+            GenerateScript(folderPath, $"{folderName}View", "c0f71e86efe9ac2458ecf50718284a9f", false, ("#FOLDERNAME#", folderName));
+            GenerateScript(folderPath, $"{folderName}Presenter", "b3613ac5dd2f4aa4c8cf6907ab6ebb0e", false, ("#FOLDERNAME#", folderName));
 
             AssetDatabase.Refresh();
 
@@ -83,7 +81,7 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
         }
 
         [MenuItem("Assets/Create/Generate C# Class from CSV", false, 0)]
-        static void GenerateClass()
+        static void GenerateCSV()
         {
             isProcessing = true;
 
@@ -112,12 +110,12 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             csv.ReadHeader();
             var headers = csv.HeaderRecord;
 
-            CreateScript(
+            GenerateScript(
                 folderPath,
                 scriptName,
                 "20352736d22781c438616f0745b9f902",
                 false,
-                ("#ROWS#", string.Join("\n", headers.Select(header => $"       public string {header} {{ get; set; }}")))
+                ("#ROWS#", string.Join("\n", headers.Select(header => $"       public string {MakeValidPropertyName(header)} {{ get; set; }}")))
             );
 
             AssetDatabase.Refresh();
@@ -147,7 +145,7 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             return path;
         }
 
-        static void CreateScript(string folderPath, string scriptName, string templateGuid, bool isReplace = false, params (string oldValue, string newValue)[] replacements)
+        static void GenerateScript(string folderPath, string scriptName, string templateGuid, bool isReplace = false, params (string oldValue, string newValue)[] replacements)
         {
             string scriptPath = Path.Combine(folderPath, $"{scriptName}.cs");
             var namespacePath = GetNamespacePath(folderPath);
