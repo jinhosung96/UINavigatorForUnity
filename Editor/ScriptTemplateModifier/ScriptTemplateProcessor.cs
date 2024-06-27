@@ -3,6 +3,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 #if CSV_HELPER_SUPPORT
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -115,7 +116,8 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
                 scriptName,
                 "20352736d22781c438616f0745b9f902",
                 false,
-                ("#ROWS#", string.Join("\n", headers.Select(header => $"       public string {MakeValidPropertyName(header)} {{ get; set; }}")))
+                ("#ROWS#", string.Join("\n", headers.Select(header => $"        public string {MakeValidPropertyName(header)} {{ get; set; }}"))),
+                ("#MAPPING#", string.Join("\n", headers.Select(header => $"            Map(m => m.{MakeValidPropertyName(header)}).Name(\"{header}\");")))
             );
 
             AssetDatabase.Refresh();
@@ -173,8 +175,17 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
 
         static string MakeValidPropertyName(string header)
         {
-            // Replace invalid characters with underscores and capitalize the first letter
-            string validName = header.Replace(" ", "_").Replace("-", "_");
+            // Replace invalid characters with underscores
+            string validName = Regex.Replace(header, @"[^a-zA-Z0-9]", "_");
+    
+            // Remove leading underscores if any
+            validName = validName.Trim('_');
+
+            // Convert to PascalCase
+            TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
+            validName = textInfo.ToTitleCase(validName.ToLower()).Replace("_", string.Empty);
+            
+            // If the first character is a digit, prepend an underscore
             if (char.IsDigit(validName[0]))
             {
                 validName = "_" + validName;

@@ -1,7 +1,17 @@
+using CsvHelper.Configuration;
+
 namespace #NAMESPACE#
 {
     public class #SCRIPTNAME#
     {
 #ROWS#
+    }
+    
+    public class #SCRIPTNAME#Map : ClassMap<#SCRIPTNAME#>
+    {
+        public #SCRIPTNAME#Map()
+        {
+#MAPPING#
+        }
     }
 }
