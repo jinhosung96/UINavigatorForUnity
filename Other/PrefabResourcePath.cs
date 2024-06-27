@@ -11,7 +11,8 @@ namespace MoraeGames.Library.Other
     {
         [SerializeField, HideInInspector] public string resourcePath;
 
-        private void OnValidate()
+#if UNITY_EDITOR
+        void OnValidate()
         {
             if (string.IsNullOrEmpty(resourcePath))
             {
@@ -25,6 +26,7 @@ namespace MoraeGames.Library.Other
                 }
             }
         }
+#endif
     }
 
 #if UNITY_EDITOR
@@ -32,7 +34,7 @@ namespace MoraeGames.Library.Other
     [CustomEditor(typeof(PrefabResourcePath))]
     public class PrefabResourcePathEditor : UnityEditor.Editor
     {
-        private void OnEnable()
+        void OnEnable()
         {
             PrefabResourcePath prefabResourcePath = (PrefabResourcePath)target;
             string assetPath = AssetDatabase.GetAssetPath(prefabResourcePath.gameObject);
