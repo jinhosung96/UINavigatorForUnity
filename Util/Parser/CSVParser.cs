@@ -1,3 +1,4 @@
+#if CSV_HELPER_SUPPORT
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,7 +17,7 @@ namespace MoraeGames.Library.Util.Parser
     {
         #region Public Methods
 
-        public static List<T> ReadCsv<T>(string filePath)
+        public static List<T> ReadCsv<T>(string filePath, Type classMap = default)
         {
             TextAsset csvFile = Resources.Load<TextAsset>(filePath);
             if (csvFile == null)
@@ -34,6 +35,8 @@ namespace MoraeGames.Library.Util.Parser
             using var reader = new StringReader(csvFile.text);
             using var csv = new CsvReader(reader, config);
 
+            if (classMap != default) csv.Context.RegisterClassMap(classMap);
+            
             return csv.GetRecords<T>().ToList();
         }
 
@@ -74,11 +77,5 @@ namespace MoraeGames.Library.Util.Parser
 
         #endregion
     }
-
-#if UNITY_EDITOR
-    public static class CsvHeaderGenerator
-    {
-        
-    }
-#endif
 }
+#endif
