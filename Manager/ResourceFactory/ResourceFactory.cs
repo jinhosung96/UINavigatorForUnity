@@ -121,13 +121,11 @@ namespace MoraeGames.Library.Manager.ResourceFactory
         {
             if (typeof(Component).IsAssignableFrom(typeof(T)) || typeof(GameObject).IsAssignableFrom(typeof(T)))
             {
-#if ADDRESSABLE_SUPPORT
                 GameObject handle = null;
                 if (resource is Component resourceComponent) handle = resourceComponent.gameObject;
                 else if (resource is GameObject resourceGameObject) handle = resourceGameObject;
                 
                 if (handle != null && onPreInitialize != null) handle.SetActive(false);
-#endif
 
 
                 T instance = null;
