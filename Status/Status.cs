@@ -1,10 +1,92 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if UNIRX_SUPPORT
+using MoraeGames.Library.UniRxCustom;
+using UniRx;
+#endif
 using UnityEngine;
 
 namespace MoraeGames.Library.Status
 {
+#if UNIRX_SUPPORT
+    public class IntHPProperty
+    {
+        #region Properties
+        
+        public IntReactivePropertyWithRange CurrentHP { get; }
+        public IObservable<(int hp, float ratio, int delta)> OnChangedHP => CurrentHP.Pairwise((prev, curr) => (curr, (float)curr / CurrentHP.Max, (curr - prev))).Share();
+        public ToggleAbilityProperty IsInvincible { get; } = new(false);
+
+        #endregion
+
+        #region Constructor
+
+        public IntHPProperty(int maxHP)
+        {
+            CurrentHP = new IntReactivePropertyWithRange(maxHP, 0, maxHP);
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public int TakeDamage(int damage)
+        {
+            int applyDamage = IsInvincible.Value ? 0 : Math.Min(CurrentHP.Value, damage);
+            if (!IsInvincible.Value) CurrentHP.Value -= damage;
+            return applyDamage;
+        }
+
+        public int TakeHeal(int heal)
+        {
+            int applyHeal = Math.Min(CurrentHP.Max - CurrentHP.Value, heal);
+            CurrentHP.Value += heal;
+            return applyHeal;
+        }
+
+        #endregion
+    }
+    
+    public class FloatHPProperty
+    {
+        #region Properties
+        
+        public FloatReactivePropertyWithRange CurrentHP { get; }
+        public IObservable<(float hp, float ratio, float delta)> OnChangedHP => CurrentHP.Pairwise((prev, curr) => (curr, (float)curr / CurrentHP.Max, (curr - prev))).Share();
+        public ToggleAbilityProperty IsInvincible { get; } = new(false);
+
+        #endregion
+
+        #region Constructor
+
+        public FloatHPProperty(float maxHP)
+        {
+            CurrentHP = new FloatReactivePropertyWithRange(maxHP, 0, maxHP);
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public float TakeDamage(float damage)
+        {
+            float applyDamage = IsInvincible.Value ? 0 : Math.Min(CurrentHP.Value, damage);
+            if (!IsInvincible.Value) CurrentHP.Value -= damage;
+            return applyDamage;
+        }
+
+        public float TakeHeal(float heal)
+        {
+            float applyHeal = Math.Min(CurrentHP.Max - CurrentHP.Value, heal);
+            CurrentHP.Value += heal;
+            return applyHeal;
+        }
+
+        #endregion
+    }
+#endif
+    
     [System.Serializable]
 
     public class IntAbilityProperty
