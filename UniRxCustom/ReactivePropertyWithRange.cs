@@ -8,8 +8,8 @@ namespace MoraeGames.Library.UniRxCustom
     [Serializable]
     public class IntReactivePropertyWithRange : IntReactiveProperty
     {
-        public int Min { get; }
-        public int Max { get; }
+        public int Min { get; set; }
+        public int Max { get; set; }
 
         public IntReactivePropertyWithRange(int min, int max) : base()
         {
@@ -33,8 +33,8 @@ namespace MoraeGames.Library.UniRxCustom
     [Serializable]
     public class FloatReactivePropertyWithRange : FloatReactiveProperty
     {
-        public float Min { get; }
-        public float Max { get; }
+        public float Min { get; set; }
+        public float Max { get; set; }
 
         public FloatReactivePropertyWithRange(float min, float max) : base()
         {
