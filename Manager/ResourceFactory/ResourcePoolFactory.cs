@@ -53,22 +53,6 @@ namespace MoraeGames.Library.Manager.ResourceFactory
 
         #endregion
 
-        #region Public Methods
-
-        public ResourcePoolFactory<T> AddTo(GameObject addTo)
-        {
-            if(addTo) addTo.OnDestroyAsObservable().Subscribe(_ => Dispose());
-            return this;
-        }
-        
-        public ResourcePoolFactory<T> AddTo(Component addTo)
-        {
-            if(addTo) addTo.OnDestroyAsObservable().Subscribe(_ => Dispose());
-            return this;
-        }
-
-        #endregion
-
         #region Override Methods
 
         public override T Load(Transform parent = null, Action<T> onPreInitialize = null)
@@ -148,9 +132,12 @@ namespace MoraeGames.Library.Manager.ResourceFactory
         void Enqueue(T instance)
         {
             if(!instance) return;
-            
+
             if ((typeof(Component).IsAssignableFrom(typeof(T)) || typeof(GameObject).IsAssignableFrom(typeof(T))) && !container)
-                container = new GameObject($"Pool[{path}]").transform;
+            {
+                container = GameObject.Find("ResourceFactoryPool")?.transform;
+                if(!container) container = new GameObject("ResourceFactoryPool").transform;
+            }
             
             pool.Add(instance);
 
