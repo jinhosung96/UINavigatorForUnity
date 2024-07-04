@@ -525,6 +525,20 @@ namespace MoraeGames.Library.Extension
             
             return GetOrAddComponent<ObservableOnMouseUpTrigger>(component.gameObject).OnMouseUpAsObservable();
         }
+        
+        public static IObservable<Unit> OnParticleSystemStoppedAsObservable(this GameObject gameObject)
+        {
+            if (!gameObject) return Observable.Empty<Unit>();
+            
+            return GetOrAddComponent<ObservableOnParticleSystemStopped>(gameObject).OnParticleSystemStoppedAsObservable();
+        }
+        
+        public static IObservable<Unit> OnParticleSystemStoppedAsObservable(this Component component)
+        {
+            if (!component || !component.gameObject) return Observable.Empty<Unit>();
+            
+            return GetOrAddComponent<ObservableOnParticleSystemStopped>(component.gameObject).OnParticleSystemStoppedAsObservable();
+        }
 
         // 일정 시간 내 Double Click을 감지하는 기능을 UniRx에 추가
         public static IObservable<Unit> OnDoubleClick(this Button button, float interval = 0.5f)
