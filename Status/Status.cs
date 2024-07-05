@@ -93,8 +93,8 @@ namespace MoraeGames.Library.Status
     {
         [field: SerializeField] public int BaseValue { get; set; }
         public int Value => (int)((BaseValue + AdditionEffects.Select(buff => buff.Value).Sum()) * MultiplicationEffects.Select(buff => 1 + buff.Value).Aggregate(1f, (a, b) => a * b));
-        public List<IntAbilityEffect> AdditionEffects { get; } = new();
-        public List<IntAbilityEffect> MultiplicationEffects { get; } = new();
+        public List<NumericAbilityEffect> AdditionEffects { get; } = new();
+        public List<NumericAbilityEffect> MultiplicationEffects { get; } = new();
 
         public IntAbilityProperty(int baseValue) => BaseValue = baseValue;
     }
@@ -105,8 +105,8 @@ namespace MoraeGames.Library.Status
         [field: SerializeField] public float BaseValue { get; set; }
         public float Value => (BaseValue + AdditionEffects.Select(buff => buff.Value).Sum()) * MultiplicationEffects.Select(buff => 1 + buff.Value).Aggregate(1f, (a, b) => a * b);
 
-        public List<FloatAbilityEffect> AdditionEffects { get; } = new();
-        public List<FloatAbilityEffect> MultiplicationEffects { get; } = new();
+        public List<NumericAbilityEffect> AdditionEffects { get; } = new();
+        public List<NumericAbilityEffect> MultiplicationEffects { get; } = new();
 
         public FloatAbilityProperty(float baseValue) => BaseValue = baseValue;
     }

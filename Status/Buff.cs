@@ -3,27 +3,14 @@ using UnityEngine;
 
 namespace MoraeGames.Library.Status
 {
-    [System.Serializable]
-
-    public class IntAbilityEffect
-    {
-        [field: SerializeField] public int Id { get; private set; }
-        [field: SerializeField] public float Value { get; private set; }
-
-        public IntAbilityEffect(int id, float value)
-        {
-            Id = id;
-            Value = value;
-        }
-    }
 
     [Serializable]
-    public class FloatAbilityEffect
+    public class NumericAbilityEffect
     {
         [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public float Value { get; private set; }
 
-        public FloatAbilityEffect(int id, float value)
+        public NumericAbilityEffect(int id, float value)
         {
             Id = id;
             Value = value;
