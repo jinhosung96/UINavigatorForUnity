@@ -117,7 +117,7 @@ namespace MoraeGames.Library.Manager.SceneLoader
             postLoadSubject.OnNext((prev, next));
         }
 
-        public async UniTask LoadSceneAsync(int targetBuildIndex, Func<UniTask> onPreprocess, bool useAddressable)
+        async UniTask LoadSceneAsync(int targetBuildIndex, Func<UniTask> onPreprocess, bool useAddressable)
         {
             string targetScenePath = SceneUtility.GetScenePathByBuildIndex(targetBuildIndex);
             string targetSceneName = System.IO.Path.GetFileNameWithoutExtension(targetScenePath);
