@@ -5,6 +5,13 @@ namespace #NAMESPACE#
 {
     public class #FOLDERNAME#Presenter : VObject<#FOLDERNAME#Context>, IStartable
     {
+        #region Fields
+
+        [Inject] readonly #FOLDERNAME#Model model;
+        [Inject] readonly #FOLDERNAME#View view;
+
+        #endregion
+        
         #region EntryPoint
     
         void IStartable.Start()
