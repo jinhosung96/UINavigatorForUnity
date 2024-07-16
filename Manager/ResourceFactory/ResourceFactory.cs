@@ -40,7 +40,12 @@ namespace MoraeGames.Library.Manager.ResourceFactory
         readonly bool isInject;
 
         readonly bool isAddressable;
-        protected readonly string path;
+
+        #endregion
+
+        #region Properties
+
+        public string Path { get; }
 
         #endregion
 
@@ -48,7 +53,7 @@ namespace MoraeGames.Library.Manager.ResourceFactory
 
         protected ResourceFactory(string path, bool isAddressable, bool isInject)
         {
-            this.path = path;
+            Path = path;
             this.isAddressable = isAddressable;
             this.isInject = isInject;
         }
@@ -73,7 +78,7 @@ namespace MoraeGames.Library.Manager.ResourceFactory
                 resource = typeof(Component).IsAssignableFrom(typeof(T)) ? Addressables.LoadAssetAsync<GameObject>(path).WaitForCompletion().GetComponent<T>() : Addressables.LoadAssetAsync<T>(path).WaitForCompletion();
 #endif
             }
-            else resource = Resources.Load<T>(path);
+            else resource = Resources.Load<T>(Path);
 
             if (!resource) return null;
             if (TryInstantiate(parent, resource, onPreInitialize, out var instance)) return instance;
@@ -93,7 +98,7 @@ namespace MoraeGames.Library.Manager.ResourceFactory
                 else resource = await Addressables.LoadAssetAsync<T>(path);
 #endif
             }
-            else resource = await Resources.LoadAsync<T>(path) as T;
+            else resource = await Resources.LoadAsync<T>(Path) as T;
 
             if (!resource) return null;
             if (TryInstantiate(parent, resource, onPreInitialize, out var instance)) return instance;
