@@ -10,24 +10,26 @@ using UnityEngine;
 namespace MoraeGames.Library.Status
 {
 #if UNIRX_SUPPORT
-    [Serializable]
     public class IntHPProperty
     {
         #region Properties
         
-        [field: SerializeField] public IntReactivePropertyWithRange CurrentHP { get; private set; }
-        [field: SerializeField] public ToggleAbilityProperty IsInvincible { get; private set; } = new(false);
+        public IntReactivePropertyWithRange CurrentHP { get; }
         public IObservable<(int hp, float ratio, int delta)> OnChangedHP => CurrentHP.Pairwise((prev, curr) => (curr, (float)curr / CurrentHP.Max, (curr - prev))).Share();
+        public ToggleAbilityProperty IsInvincible { get; } = new(false);
+
+        #endregion
+
+        #region Constructor
+
+        public IntHPProperty(int maxHP)
+        {
+            CurrentHP = new IntReactivePropertyWithRange(maxHP, 0, maxHP);
+        }
 
         #endregion
 
         #region Public Methods
-
-        public IntHPProperty Initialize(int maxHP)
-        {
-            CurrentHP = new IntReactivePropertyWithRange(maxHP, 0, maxHP);
-            return this;
-        }
 
         public int TakeDamage(int damage)
         {
@@ -46,13 +48,12 @@ namespace MoraeGames.Library.Status
         #endregion
     }
     
-    [Serializable]
     public class FloatHPProperty
     {
         #region Properties
         
-        [field: SerializeField] public FloatReactivePropertyWithRange CurrentHP { get; private set; }
-        public IObservable<(float hp, float ratio, float delta)> OnChangedHP => CurrentHP.Pairwise((prev, curr) => (curr, curr / CurrentHP.Max, curr - prev)).Share();
+        public FloatReactivePropertyWithRange CurrentHP { get; }
+        public IObservable<(float hp, float ratio, float delta)> OnChangedHP => CurrentHP.Pairwise((prev, curr) => (curr, (float)curr / CurrentHP.Max, (curr - prev))).Share();
         public ToggleAbilityProperty IsInvincible { get; } = new(false);
 
         #endregion
@@ -86,7 +87,7 @@ namespace MoraeGames.Library.Status
     }
 #endif
     
-    [Serializable]
+    [System.Serializable]
 
     public class IntAbilityProperty
     {
@@ -110,7 +111,6 @@ namespace MoraeGames.Library.Status
         public FloatAbilityProperty(float baseValue) => BaseValue = baseValue;
     }
 
-    [Serializable]
     public class ToggleAbilityProperty
     {
         [field: SerializeField] public bool BaseValue { get; set; }
