@@ -14,7 +14,7 @@ namespace JHS.Library.UINavigator.Runtime.Animation {
         public override async UniTask AnimateAsync(CanvasGroup canvasGroup)
         {
             canvasGroup.alpha = from;
-            await canvasGroup.DOFade(1, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).ToUniTask();
+            await canvasGroup.DOFade(1, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).SetLink(canvasGroup.gameObject).ToUniTask();
         }
     }
 
@@ -28,7 +28,7 @@ namespace JHS.Library.UINavigator.Runtime.Animation {
         public override async UniTask AnimateAsync(CanvasGroup canvasGroup)
         {
             canvasGroup.alpha = 1;
-            await canvasGroup.DOFade(to, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).ToUniTask();
+            await canvasGroup.DOFade(to, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).SetLink(canvasGroup.gameObject).ToUniTask();
         }
     }
 }

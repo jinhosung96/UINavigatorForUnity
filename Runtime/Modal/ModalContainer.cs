@@ -47,7 +47,7 @@ namespace JHS.Library.UINavigator.Runtime.Modal
         protected override void Awake()
         {
             base.Awake();
-            
+
 #if ADDRESSABLE_SUPPORT
             if(InstantiateType == InstantiateType.InstantiateByAddressable) RegisterModalsByPrefab = RegisterModalsByAddressable.Select(x => x.LoadAssetAsync<GameObject>().WaitForCompletion().GetComponent<Modal>()).ToList();
 #endif
@@ -130,14 +130,14 @@ namespace JHS.Library.UINavigator.Runtime.Modal
             {
                 await UniTask.WhenAll
                 (
-                    currentView.BackDrop.DOFade(0, 0.2f).ToUniTask(),
+                    currentView.BackDrop.DOFade(0, 0.2f).SetUpdate(true).SetLink(currentView.BackDrop.gameObject).ToUniTask(),
                     currentView.HideAsync()
                 );
             }
             else await currentView.HideAsync();
 
             if (currentView.BackDrop) Destroy(currentView.BackDrop.gameObject);
-            Destroy(currentView.gameObject);
+            if (currentView) Destroy(currentView.gameObject);
         }
 
         #endregion
@@ -145,8 +145,8 @@ namespace JHS.Library.UINavigator.Runtime.Modal
         #region Private Methods
 
         async UniTask<T> NextAsync<T>(T nextModal,
-            Action<T> onPreInitialize,
-            Action<T> onPostInitialize) where T : Modal
+                                      Action<T> onPreInitialize,
+                                      Action<T> onPostInitialize) where T : Modal
         {
             if (CurrentView != null && CurrentView.VisibleState is VisibleState.Appearing or VisibleState.Disappearing) return null;
 
@@ -212,7 +212,9 @@ namespace JHS.Library.UINavigator.Runtime.Modal
 
         #region ISerializationCallbackReceiver
 
-        public void OnBeforeSerialize() { }
+        public void OnBeforeSerialize()
+        {
+        }
 
         public void OnAfterDeserialize()
         {

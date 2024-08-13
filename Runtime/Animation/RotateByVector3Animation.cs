@@ -15,7 +15,7 @@ namespace JHS.Library.UINavigator.Runtime.Animation
         public override async UniTask AnimateAsync(RectTransform rectTransform)
         {
             rectTransform.localRotation = Quaternion.Euler(from);
-            await rectTransform.DOLocalRotate(Vector3.zero, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).ToUniTask();
+            await rectTransform.DOLocalRotate(Vector3.zero, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).SetLink(rectTransform.gameObject).ToUniTask();
         }
     }
     
@@ -29,7 +29,7 @@ namespace JHS.Library.UINavigator.Runtime.Animation
         public override async UniTask AnimateAsync(RectTransform rectTransform)
         {
             rectTransform.localRotation = Quaternion.Euler(Vector3.zero);
-            await rectTransform.DOLocalRotate(to, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).ToUniTask();
+            await rectTransform.DOLocalRotate(to, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).SetLink(rectTransform.gameObject).ToUniTask();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace JHS.Library.UINavigator.Runtime.Animation
         public override async UniTask AnimateAsync(RectTransform rectTransform)
         {
             rectTransform.localScale = Vector3.one * from;
-            await rectTransform.DOScale(1, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).ToUniTask();
+            await rectTransform.DOScale(1, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).SetLink(rectTransform.gameObject).ToUniTask();
         }
     }
     
@@ -29,7 +29,7 @@ namespace JHS.Library.UINavigator.Runtime.Animation
         public override async UniTask AnimateAsync(RectTransform rectTransform)
         {
             rectTransform.localScale = Vector3.one;
-            await rectTransform.DOScale(to, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).ToUniTask();
+            await rectTransform.DOScale(to, duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).SetLink(rectTransform.gameObject).ToUniTask();
         }
     }
 }
