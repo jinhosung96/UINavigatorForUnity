@@ -168,10 +168,14 @@ namespace JHS.Library.UINavigator.Runtime.Modal
             if (backdrop)
             {
                 nextModal.BackDrop = backdrop;
-                if (!nextModal.BackDrop.TryGetComponent<Button>(out var button))
-                    button = nextModal.BackDrop.gameObject.AddComponent<Button>();
 
-                button.OnClickAsObservable().Subscribe(_ => PrevAsync().Forget());
+                if (nextModal.EnableBackDropButton)
+                {
+                    if (!nextModal.BackDrop.TryGetComponent<Button>(out var button))
+                        button = nextModal.BackDrop.gameObject.AddComponent<Button>();
+
+                    button.OnClickAsObservable().Subscribe(_ => PrevAsync().Forget());
+                }
             }
 
             History.Push(nextModal);
