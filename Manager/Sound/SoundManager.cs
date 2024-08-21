@@ -90,34 +90,6 @@ namespace MoraeGames.Library.Manager.Sound
 
         #endregion
 
-        #region Private Methods
-
-        void AddAudioSourceForBgm()
-        {
-            audioSourceForBgm = audioPlayer.AddComponent<AudioSource>();
-            audioSourceForBgm.loop = true;
-            audioSourceForBgm.playOnAwake = false;
-            VolumeBGM.Subscribe(volume => audioSourceForBgm.volume = volume).AddTo(audioSourceForBgm);
-        }
-    
-        AudioSource AddAudioSourceForSfx()
-        {
-            var audioSource = audioPlayer.AddComponent<AudioSource>();
-            audioSource.loop = false;
-            audioSource.playOnAwake = false;
-            audioSourcesForSfx.Add(audioSource);
-            return audioSource;
-        }
-
-        void PlaySound(AudioSource audioSource, AudioClip clip, float volume)
-        {
-            audioSource.clip = clip;
-            audioSource.volume = volume;
-            audioSource.Play();
-        }
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>
@@ -176,6 +148,34 @@ namespace MoraeGames.Library.Manager.Sound
 
             var newAudioSource = AddAudioSourceForSfx();
             PlaySound(newAudioSource, clip, volume * VolumeEffect.Value);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        void AddAudioSourceForBgm()
+        {
+            audioSourceForBgm = audioPlayer.AddComponent<AudioSource>();
+            audioSourceForBgm.loop = true;
+            audioSourceForBgm.playOnAwake = false;
+            VolumeBGM.Subscribe(volume => audioSourceForBgm.volume = volume).AddTo(audioSourceForBgm);
+        }
+    
+        AudioSource AddAudioSourceForSfx()
+        {
+            var audioSource = audioPlayer.AddComponent<AudioSource>();
+            audioSource.loop = false;
+            audioSource.playOnAwake = false;
+            audioSourcesForSfx.Add(audioSource);
+            return audioSource;
+        }
+
+        void PlaySound(AudioSource audioSource, AudioClip clip, float volume)
+        {
+            audioSource.clip = clip;
+            audioSource.volume = volume;
+            audioSource.Play();
         }
 
         #endregion
