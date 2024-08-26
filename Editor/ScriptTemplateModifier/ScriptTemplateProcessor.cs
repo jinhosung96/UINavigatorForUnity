@@ -116,7 +116,7 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
                 scriptName,
                 "20352736d22781c438616f0745b9f902",
                 false,
-                ("#ROWS#", string.Join("\n", headers.Select(header => $"        public string {MakeValidPropertyName(header)} {{ get; set; }}"))),
+                ("#ROWS#", string.Join("\n", headers.Select(header => $"        [field: SerializeField] public string {MakeValidPropertyName(header)} {{ get; set; }}"))),
                 ("#MAPPING#", string.Join("\n", headers.Select(header => $"            Map(m => m.{MakeValidPropertyName(header)}).Name(\"{header}\");")))
             );
 

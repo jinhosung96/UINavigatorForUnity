@@ -1,7 +1,9 @@
 using CsvHelper.Configuration;
+using UnityEngine;
 
 namespace #NAMESPACE#
 {
+    [System.Serializable]
     public class #SCRIPTNAME#
     {
 #ROWS#
