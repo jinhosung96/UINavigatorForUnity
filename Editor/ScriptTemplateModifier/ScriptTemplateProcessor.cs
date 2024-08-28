@@ -46,7 +46,6 @@ namespace MoraeGames.Library.Editor.ScriptTemplateModifier
             else if (scriptName.EndsWith("View")) GenerateScript(folderPath, scriptName, "1311c83fd8deab645a38c59b3759cf71", true);
             else if (scriptName.EndsWith("Presenter")) GenerateScript(folderPath, scriptName, "b9b5b34cecdd1284f88a5ffbbd408f40", true);
             else if (scriptName.EndsWith("ScriptableObject") || scriptName.EndsWith("SO") || scriptName.EndsWith("Setting")) GenerateScript(folderPath, scriptName, "02e9f3b7e4db83249bb3b60ea3362e9f", true);
-            else GenerateScript(folderPath, scriptName, "761127faa8d628c4d84b14bd7e5e9392", true);
             
             AssetDatabase.Refresh();
         }
