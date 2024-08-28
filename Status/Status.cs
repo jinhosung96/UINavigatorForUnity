@@ -10,45 +10,7 @@ using UnityEngine;
 namespace MoraeGames.Library.Status
 {
 #if UNIRX_SUPPORT
-    public class IntHPProperty
-    {
-        #region Properties
-        
-        public IntReactivePropertyWithRange CurrentHP { get; }
-        public IObservable<(int hp, float ratio, int delta)> OnChangedHP => CurrentHP.Pairwise((prev, curr) => (curr, (float)curr / CurrentHP.Max, (curr - prev))).Share();
-        public ToggleAbilityProperty IsInvincible { get; } = new(false);
-
-        #endregion
-
-        #region Constructor
-
-        public IntHPProperty(int maxHP)
-        {
-            CurrentHP = new IntReactivePropertyWithRange(maxHP, 0, maxHP);
-        }
-
-        #endregion
-
-        #region Public Methods
-
-        public int TakeDamage(int damage)
-        {
-            int applyDamage = IsInvincible.Value ? 0 : Math.Min(CurrentHP.Value, damage);
-            if (!IsInvincible.Value) CurrentHP.Value -= damage;
-            return applyDamage;
-        }
-
-        public int TakeHeal(int heal)
-        {
-            int applyHeal = Math.Min(CurrentHP.Max - CurrentHP.Value, heal);
-            CurrentHP.Value += heal;
-            return applyHeal;
-        }
-
-        #endregion
-    }
-    
-    public class FloatHPProperty
+    public class HPProperty
     {
         #region Properties
         
@@ -60,7 +22,7 @@ namespace MoraeGames.Library.Status
 
         #region Constructor
 
-        public FloatHPProperty(float maxHP)
+        public HPProperty(float maxHP)
         {
             CurrentHP = new FloatReactivePropertyWithRange(maxHP, 0, maxHP);
         }
@@ -86,21 +48,9 @@ namespace MoraeGames.Library.Status
         #endregion
     }
 #endif
-    
-    [System.Serializable]
-
-    public class IntAbilityProperty
-    {
-        [field: SerializeField] public int BaseValue { get; set; }
-        public int Value => (int)((BaseValue + AdditionEffects.Select(buff => buff.Value).Sum()) * MultiplicationEffects.Select(buff => 1 + buff.Value).Aggregate(1f, (a, b) => a * b));
-        public List<NumericAbilityEffect> AdditionEffects { get; } = new();
-        public List<NumericAbilityEffect> MultiplicationEffects { get; } = new();
-
-        public IntAbilityProperty(int baseValue) => BaseValue = baseValue;
-    }
 
     [Serializable]
-    public class FloatAbilityProperty
+    public class NumericAbilityProperty
     {
         [field: SerializeField] public float BaseValue { get; set; }
         public float Value => (BaseValue + AdditionEffects.Select(buff => buff.Value).Sum()) * MultiplicationEffects.Select(buff => 1 + buff.Value).Aggregate(1f, (a, b) => a * b);
@@ -108,7 +58,7 @@ namespace MoraeGames.Library.Status
         public List<NumericAbilityEffect> AdditionEffects { get; } = new();
         public List<NumericAbilityEffect> MultiplicationEffects { get; } = new();
 
-        public FloatAbilityProperty(float baseValue) => BaseValue = baseValue;
+        public NumericAbilityProperty(float baseValue) => BaseValue = baseValue;
     }
 
     public class ToggleAbilityProperty
