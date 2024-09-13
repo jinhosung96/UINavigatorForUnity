@@ -5,7 +5,7 @@ namespace JHS.Library.UINavigator.Runtime
 {
     public interface IHasHistory
     {
-        UniTask PrevAsync(int count = 1);
+        UniTask PrevAsync(int count = 1, bool useAnimation = true);
     }
 }
 

@@ -70,8 +70,7 @@ namespace JHS.Library.UINavigator.Runtime
                     .Where(view => view is not Sheet.Sheet)
                     .Where(view =>
                     {
-                        if (view is not Page.Page page) return true;
-                        if (page.UIContainer is PageContainer pageContainer) return pageContainer.DefaultPage != page;
+                        if (view is Page.Page { UIContainer: PageContainer { HasDefault: true } pageContainer } page) return pageContainer.DefaultPage != page;
                         return true;
                     });
 

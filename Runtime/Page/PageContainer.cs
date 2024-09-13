@@ -17,13 +17,13 @@ namespace JHS.Library.UINavigator.Runtime.Page
     public sealed class PageContainer : UIContainer<PageContainer>, IHasHistory, ISerializationCallbackReceiver
     {
         #region Properties
-        
-        [field: SerializeField] public List<Page> RegisterPagesByPrefab {get; private set; } = new(); // 해당 Container에서 생성할 수 있는 Page들에 대한 목록
+
+        [field: SerializeField] public List<Page> RegisterPagesByPrefab { get; private set; } = new(); // 해당 Container에서 생성할 수 있는 Page들에 대한 목록
 #if ADDRESSABLE_SUPPORT
         [field: SerializeField] public List<ComponentReference<Page>> RegisterPagesByAddressable {get; private set; } = new(); // 해당 Container에서 생성할 수 있는 Page들에 대한 목록 
 #endif
         [field: SerializeField] public bool HasDefault { get; private set; } // 시작할 때 초기 시트 활성화 여부
-        internal Page DefaultPage { get; private set; }
+        internal Page DefaultPage => History.FirstOrDefault();
 
         Dictionary<Type, Page> Pages { get; set; }
 
@@ -34,7 +34,7 @@ namespace JHS.Library.UINavigator.Runtime.Page
         Stack<Page> History { get; } = new();
 
         public Page CurrentView => History.TryPeek(out var currentView) ? currentView : null;
-        bool IsRemainHistory => DefaultPage ? History.Count > 1 : History.Count > 0;
+        bool IsRemainHistory => HasDefault ? History.Count > 1 : History.Count > 0;
 
         #endregion
 
@@ -43,13 +43,13 @@ namespace JHS.Library.UINavigator.Runtime.Page
         protected override void Awake()
         {
             base.Awake();
-            
+
 #if ADDRESSABLE_SUPPORT
             if(InstantiateType == InstantiateType.InstantiateByAddressable) RegisterPagesByPrefab = RegisterPagesByAddressable.Select(x => x.LoadAssetAsync<GameObject>().WaitForCompletion().GetComponent<Page>()).ToList();
 #endif
 
             // pages에 등록된 모든 Page들을 Type을 키값으로 한 Dictionary 형태로 등록
-            RegisterPagesByPrefab = RegisterPagesByPrefab.Select(x => x.IsRecycle ? Instantiate(x, transform) : x).GroupBy(x => x.GetType()).Select(x => x.FirstOrDefault()).ToList();
+            RegisterPagesByPrefab = RegisterPagesByPrefab.GroupBy(x => x.GetType()).Select(x => x.First()).Select(x => x.IsRecycle ? Instantiate(x, transform) : x).ToList();
             Pages = RegisterPagesByPrefab.ToDictionary(page => page.GetType(), page => page);
 
             foreach (var x in RegisterPagesByPrefab.Where(x => x.IsRecycle))
@@ -58,24 +58,10 @@ namespace JHS.Library.UINavigator.Runtime.Page
                 x.gameObject.SetActive(false);
             }
 
-            if(HasDefault && RegisterPagesByPrefab.Any()) DefaultPage = Pages[RegisterPagesByPrefab.First().GetType()];
+            if (HasDefault && RegisterPagesByPrefab.Any()) NextAsync(RegisterPagesByPrefab.First().GetType(), null, null, false).Forget();
         }
 
-        void OnEnable()
-        {
-            if (DefaultPage && Pages.TryGetValue(DefaultPage.GetType(), out var nextPage))
-            {
-                if (CurrentView)
-                {
-                    CurrentView.HideAsync(false).Forget();
-                    if (!CurrentView.IsRecycle) Destroy(CurrentView.gameObject);
-                }
-
-                nextPage = nextPage.IsRecycle ? nextPage : Instantiate(nextPage, transform);
-                nextPage.ShowAsync(false).Forget();
-                History.Push(nextPage);
-            }
-        }
+        void OnEnable() => ResetAsync(false).Forget();
 
         #endregion
 
@@ -92,10 +78,11 @@ namespace JHS.Library.UINavigator.Runtime.Page
         /// <returns></returns>
         public async UniTask<T> NextAsync<T>(
             Action<T> onPreInitialize = null,
-            Action<T> onPostInitialize = null) where T : Page
+            Action<T> onPostInitialize = null,
+            bool useAnimation = true) where T : Page
         {
             if (Pages.TryGetValue(typeof(T), out var page))
-                return await NextAsync(page as T, onPreInitialize, onPostInitialize);
+                return await NextAsync(page as T, onPreInitialize, onPostInitialize, useAnimation);
 
             Debug.LogError($"Page not found : {typeof(T)}");
             return null;
@@ -111,11 +98,12 @@ namespace JHS.Library.UINavigator.Runtime.Page
         /// <param name="nextPageName"> 활성화 시킬 Page의 클래스명 </param>
         /// <returns></returns>
         public async UniTask<Page> NextAsync(string nextPageName,
-            Action<Page> onPreInitialize = null,
-            Action<Page> onPostInitialize = null)
+                                             Action<Page> onPreInitialize = null,
+                                             Action<Page> onPostInitialize = null,
+                                             bool useAnimation = true)
         {
             var page = Pages.Values.FirstOrDefault(x => x.GetType().Name == nextPageName);
-            if (page != null) return await NextAsync(page, onPreInitialize, onPostInitialize);
+            if (page != null) return await NextAsync(page, onPreInitialize, onPostInitialize, useAnimation);
 
             Debug.LogError($"Page not found : {nextPageName}");
             return null;
@@ -134,24 +122,25 @@ namespace JHS.Library.UINavigator.Runtime.Page
         /// 이 때, PopRoutineAsync 메소드를 사용하지 않는 이유는 즉각적으로 제거해주기 위함과 더불어 Sheet의 경우 PopRoutineAsync가 정의되어있지 않기 때문이다. <br/>
         /// </summary>
         public async UniTask<Page> NextAsync(Type nextPageType,
-            Action<Page> onPreInitialize = null,
-            Action<Page> onPostInitialize = null)
+                                             Action<Page> onPreInitialize = null,
+                                             Action<Page> onPostInitialize = null,
+                                             bool useAnimation = true)
         {
             if (Pages.TryGetValue(nextPageType, out var page))
-                return await NextAsync(page, onPreInitialize, onPostInitialize);
+                return await NextAsync(page, onPreInitialize, onPostInitialize, useAnimation);
 
             Debug.LogError($"Page not found : {nextPageType.Name}");
             return null;
         }
 
-        public async UniTask PrevAsync(int count = 1)
+        public async UniTask PrevAsync(int count = 1, bool useAnimation = true)
         {
-            count = Mathf.Clamp(count, 1, History.Count);
+            count = Mathf.Clamp(count, 1, HasDefault ? History.Count - 1 : History.Count);
             if (!IsRemainHistory) return;
 
             if (CurrentView.VisibleState is VisibleState.Appearing or VisibleState.Disappearing) return;
 
-            var hideView = CurrentView;
+            var prevView = CurrentView;
             var destroyTargetViews = new Queue<GameObject>();
             
             for (int i = 0; i < count; i++)
@@ -160,20 +149,17 @@ namespace JHS.Library.UINavigator.Runtime.Page
                 History.Pop();
             }
             
-            hideView.HideAsync().ContinueWith(() =>
+            prevView.HideAsync(useAnimation).ContinueWith(() =>
             {
                 while (destroyTargetViews.Any()) Destroy(destroyTargetViews.Dequeue());
             }).Forget();
 
             if (!CurrentView) return;
 
-            await CurrentView.ShowAsync();
+            await CurrentView.ShowAsync(useAnimation);
         }
 
-        public async UniTask ResetAsync()
-        {
-            await PrevAsync(History.Count);
-        }
+        public async UniTask ResetAsync(bool useAnimation = true) => await PrevAsync(History.Count, useAnimation);
 
         #endregion
 
@@ -182,7 +168,8 @@ namespace JHS.Library.UINavigator.Runtime.Page
         async UniTask<T> NextAsync<T>(
             T nextPage,
             Action<T> onPreInitialize,
-            Action<T> onPostInitialize) where T : Page
+            Action<T> onPostInitialize,
+            bool useAnimation) where T : Page
         {
             if (CurrentView && CurrentView.VisibleState is VisibleState.Appearing or VisibleState.Disappearing) return null;
             if (CurrentView && CurrentView == nextPage) return null;
@@ -201,11 +188,18 @@ namespace JHS.Library.UINavigator.Runtime.Page
             nextPage.OnPreInitialize.FirstOrDefault().Subscribe(_ => onPreInitialize?.Invoke(nextPage)).AddTo(nextPage);
             nextPage.OnPostInitialize.FirstOrDefault().Subscribe(_ => onPostInitialize?.Invoke(nextPage)).AddTo(nextPage);
 
-            if (CurrentView) CurrentView.HideAsync().Forget();
+            if (CurrentView)
+            {
+                var prevView = CurrentView;
+                prevView.HideAsync().ContinueWith(() =>
+                {
+                    if (!prevView.IsRecycle) Destroy(prevView.gameObject);
+                }).Forget();
+            }
 
             History.Push(nextPage);
 
-            await CurrentView.ShowAsync();
+            await CurrentView.ShowAsync(useAnimation);
 
             return CurrentView as T;
         }

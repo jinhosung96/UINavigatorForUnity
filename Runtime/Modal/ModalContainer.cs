@@ -71,7 +71,8 @@ namespace JHS.Library.UINavigator.Runtime.Modal
         /// <returns></returns>
         public async UniTask<T> NextAsync<T>(
             Action<T> onPreInitialize = null,
-            Action<T> onPostInitialize = null) where T : Modal
+            Action<T> onPostInitialize = null,
+            bool useAnimation = true) where T : Modal
         {
             if (Modals.TryGetValue(typeof(T), out var modal))
                 return await NextAsync(modal as T, onPreInitialize, onPostInitialize);
@@ -92,10 +93,11 @@ namespace JHS.Library.UINavigator.Runtime.Modal
         public async UniTask<Modal> NextAsync(
             string nextModalName,
             Action<Modal> onPreInitialize = null,
-            Action<Modal> onPostInitialize = null)
+            Action<Modal> onPostInitialize = null,
+            bool useAnimation = true)
         {
             var modal = Modals.Values.FirstOrDefault(x => x.GetType().Name == nextModalName);
-            if (modal != null) return await NextAsync(modal, onPreInitialize, onPostInitialize);
+            if (modal != null) return await NextAsync(modal, onPreInitialize, onPostInitialize, useAnimation);
 
             Debug.LogError($"Modal not found : {nextModalName}");
             return null;
@@ -104,40 +106,24 @@ namespace JHS.Library.UINavigator.Runtime.Modal
         public async UniTask<Modal> NextAsync(
             Type nextModalType,
             Action<Modal> onPreInitialize = null,
-            Action<Modal> onPostInitialize = null)
+            Action<Modal> onPostInitialize = null,
+            bool useAnimation = true)
         {
             if (Modals.TryGetValue(nextModalType, out var modal))
-                return await NextAsync(modal, onPreInitialize, onPostInitialize);
+                return await NextAsync(modal, onPreInitialize, onPostInitialize, useAnimation);
 
             Debug.LogError($"Modal not found : {nextModalType.Name}");
             return null;
         }
 
-        public async UniTask PrevAsync(int count = 1)
+        public async UniTask PrevAsync(int count = 1, bool useAnimation = true)
         {
             count = Mathf.Clamp(count, 1, History.Count);
 
             if (!CurrentView) return;
             if (CurrentView.VisibleState is VisibleState.Appearing or VisibleState.Disappearing) return;
 
-            await UniTask.WhenAll(Enumerable.Range(0, count).Select(_ => HideViewAsync()));
-        }
-
-        async UniTask HideViewAsync()
-        {
-            var currentView = History.Pop();
-            if (currentView.BackDrop)
-            {
-                await UniTask.WhenAll
-                (
-                    currentView.BackDrop.DOFade(0, 0.2f).SetUpdate(true).SetLink(currentView.BackDrop.gameObject).ToUniTask(),
-                    currentView.HideAsync()
-                );
-            }
-            else await currentView.HideAsync();
-
-            if (currentView.BackDrop) Destroy(currentView.BackDrop.gameObject);
-            if (currentView) Destroy(currentView.gameObject);
+            await UniTask.WhenAll(Enumerable.Range(0, count).Select(_ => HideViewAsync(useAnimation)));
         }
 
         #endregion
@@ -146,7 +132,8 @@ namespace JHS.Library.UINavigator.Runtime.Modal
 
         async UniTask<T> NextAsync<T>(T nextModal,
                                       Action<T> onPreInitialize,
-                                      Action<T> onPostInitialize) where T : Modal
+                                      Action<T> onPostInitialize,
+                                      bool useAnimation = true) where T : Modal
         {
             if (CurrentView != null && CurrentView.VisibleState is VisibleState.Appearing or VisibleState.Disappearing) return null;
 
@@ -180,11 +167,23 @@ namespace JHS.Library.UINavigator.Runtime.Modal
 
             History.Push(nextModal);
 
-#pragma warning disable 4014
-            if (nextModal.BackDrop) CurrentView.BackDrop.DOFade(1, 0.2f).SetUpdate(true);
-#pragma warning restore 4014
-
-            await CurrentView.ShowAsync();
+            if (nextModal.BackDrop)
+            {
+                if (useAnimation)
+                {
+                    await UniTask.WhenAll
+                    (
+                        CurrentView.BackDrop.DOFade(1, 0.2f).SetUpdate(true).SetLink(CurrentView.BackDrop.gameObject).ToUniTask(),
+                        CurrentView.ShowAsync()
+                    );
+                }
+                else
+                {
+                    CurrentView.ShowAsync(false).Forget();
+                    CurrentView.BackDrop.alpha = 1;
+                }
+            }
+            else CurrentView.ShowAsync(useAnimation).Forget();
 
             return CurrentView as T;
         }
@@ -206,6 +205,31 @@ namespace JHS.Library.UINavigator.Runtime.Modal
             await UniTask.Yield();
             rectTransform.anchoredPosition = Vector2.zero;
             return canvasGroup;
+        }
+
+        async UniTask HideViewAsync(bool useAnimation = true)
+        {
+            var currentView = History.Pop();
+            if (currentView.BackDrop)
+            {
+                if (useAnimation)
+                {
+                    await UniTask.WhenAll
+                    (
+                        currentView.BackDrop.DOFade(0, 0.2f).SetUpdate(true).SetLink(currentView.BackDrop.gameObject).ToUniTask(),
+                        currentView.HideAsync()
+                    );
+                }
+                else
+                {
+                    currentView.HideAsync(false).Forget();
+                    currentView.BackDrop.alpha = 0;
+                }
+            }
+            else await currentView.HideAsync(useAnimation);
+
+            if (currentView.BackDrop) Destroy(currentView.BackDrop.gameObject);
+            if (currentView) Destroy(currentView.gameObject);
         }
 
         #endregion

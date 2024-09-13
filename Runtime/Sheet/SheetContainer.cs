@@ -44,7 +44,7 @@ namespace JHS.Library.UINavigator.Runtime.Sheet
 #endif
             
             // sheets에 등록된 모든 Sheet들을 Type을 키값으로 한 Dictionary 형태로 등록
-            RegisterSheetsByPrefab = RegisterSheetsByPrefab.Select(x => x.IsRecycle ? Instantiate(x, transform) : x).GroupBy(x => x.GetType()).Select(x => x.FirstOrDefault()).ToList();
+            RegisterSheetsByPrefab = RegisterSheetsByPrefab.GroupBy(x => x.GetType()).Select(x => x.First()).Select(x => x.IsRecycle ? Instantiate(x, transform) : x).ToList();
             Sheets = RegisterSheetsByPrefab.ToDictionary(sheet => sheet.GetType(), sheet => sheet);
 
             foreach (var x in RegisterSheetsByPrefab.Where(x => x.IsRecycle))
@@ -59,16 +59,7 @@ namespace JHS.Library.UINavigator.Runtime.Sheet
             // 초기 시트를 활성화
             if (HasDefault && RegisterSheetsByPrefab.Any())
             {
-                var nextSheet = Sheets[RegisterSheetsByPrefab.First().GetType()];
-                
-                if (CurrentView)
-                {
-                    CurrentView.HideAsync(false).Forget();
-                    if (!CurrentView.IsRecycle) Destroy(CurrentView.gameObject);
-                }
-
-                CurrentView = nextSheet.IsRecycle ? nextSheet : Instantiate(nextSheet, transform);
-                CurrentView.ShowAsync(false).Forget();
+                NextAsync(RegisterSheetsByPrefab.First().GetType(), default, default, false).Forget();
             }
         }
 
@@ -89,10 +80,11 @@ namespace JHS.Library.UINavigator.Runtime.Sheet
         /// <returns></returns>
         public async UniTask<T> NextAsync<T>(
             Action<T> onPreInitialize = null,
-            Action<T> onPostInitialize = null) where T : Sheet
+            Action<T> onPostInitialize = null,
+            bool useAnimation = true) where T : Sheet
         {
             if (Sheets.TryGetValue(typeof(T), out var sheet))
-                return await NextAsync(sheet as T, onPreInitialize, onPostInitialize);
+                return await NextAsync(sheet as T, onPreInitialize, onPostInitialize, useAnimation);
 
             Debug.LogError($"Sheet not found : {typeof(T)}");
             return null;
@@ -110,10 +102,11 @@ namespace JHS.Library.UINavigator.Runtime.Sheet
         /// <returns></returns>
         public async UniTask<Sheet> NextAsync(string sheetName,
             Action<Sheet> onPreInitialize = null,
-            Action<Sheet> onPostInitialize = null)
+            Action<Sheet> onPostInitialize = null,
+            bool useAnimation = true)
         {
             var sheet = Sheets.Values.FirstOrDefault(x => x.GetType().Name == sheetName);
-            if (sheet != null) return await NextAsync(sheet, onPreInitialize, onPostInitialize);
+            if (sheet != null) return await NextAsync(sheet, onPreInitialize, onPostInitialize, useAnimation);
 
             Debug.LogError($"Sheet not found : {sheetName}");
             return null;
@@ -121,10 +114,11 @@ namespace JHS.Library.UINavigator.Runtime.Sheet
 
         public async UniTask<Sheet> NextAsync(Type targetSheet,
             Action<Sheet> onPreInitialize = null,
-            Action<Sheet> onPostInitialize = null)
+            Action<Sheet> onPostInitialize = null,
+            bool useAnimation = true)
         {
             if (Sheets.TryGetValue(targetSheet, out var nextSheet))
-                return await NextAsync(nextSheet, onPreInitialize, onPostInitialize);
+                return await NextAsync(nextSheet, onPreInitialize, onPostInitialize, useAnimation);
 
             Debug.LogError("Sheet not found");
             return null;
@@ -134,39 +128,42 @@ namespace JHS.Library.UINavigator.Runtime.Sheet
 
         #region Private Methods
 
-        async UniTask<T> NextAsync<T>(T nextSheet,
+        async UniTask<T> NextAsync<T>(T nextView,
             Action<T> onPreInitialize,
-            Action<T> onPostInitialize) where T : Sheet
+            Action<T> onPostInitialize,
+            bool useAnimation = true) where T : Sheet
         {
             if (CurrentView != null && CurrentView.VisibleState is VisibleState.Appearing or VisibleState.Disappearing) return null;
-            if (CurrentView != null && CurrentView == nextSheet) return null;
+            if (CurrentView != null && CurrentView == nextView) return null;
 
-            var prevSheet = CurrentView;
+            var prevView = CurrentView;
 
-            nextSheet.gameObject.SetActive(false);
-            nextSheet = nextSheet.IsRecycle
-                ? nextSheet
+            nextView.gameObject.SetActive(false);
+            nextView = nextView.IsRecycle
+                ? nextView
                 :
 #if VCONTAINER_SUPPORT
-                VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextSheet, transform);
+                VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextView, transform);
 #else
                 Instantiate(nextSheet, transform);
 #endif
 
-            nextSheet.UIContainer = this;
+            nextView.UIContainer = this;
 
-            nextSheet.OnPreInitialize.FirstOrDefault().Subscribe(_ => onPreInitialize?.Invoke(nextSheet)).AddTo(nextSheet);
-            nextSheet.OnPostInitialize.FirstOrDefault().Subscribe(_ => onPostInitialize?.Invoke(nextSheet)).AddTo(nextSheet);
+            nextView.OnPreInitialize.FirstOrDefault().Subscribe(_ => onPreInitialize?.Invoke(nextView)).AddTo(nextView);
+            nextView.OnPostInitialize.FirstOrDefault().Subscribe(_ => onPostInitialize?.Invoke(nextView)).AddTo(nextView);
 
-            CurrentView = nextSheet;
+            CurrentView = nextView;
             
-            if (prevSheet != null)
+            if (prevView != null)
             {
-                prevSheet.HideAsync().Forget();
-                if (!prevSheet.IsRecycle) Destroy(prevSheet.gameObject);
+                prevView.HideAsync(useAnimation).ContinueWith(() =>
+                {
+                    if (!prevView.IsRecycle) Destroy(prevView.gameObject);
+                }).Forget();
             }
 
-            await CurrentView.ShowAsync();
+            await CurrentView.ShowAsync(useAnimation);
 
             return CurrentView as T;
         }
