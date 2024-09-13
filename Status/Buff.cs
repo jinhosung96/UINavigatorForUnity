@@ -8,7 +8,7 @@ namespace MoraeGames.Library.Status
     public class NumericAbilityEffect
     {
         [field: SerializeField] public int Id { get; private set; }
-        [field: SerializeField] public float Value { get; private set; }
+        [field: SerializeField] public float Value { get; set; }
 
         public NumericAbilityEffect(int id, float value)
         {
