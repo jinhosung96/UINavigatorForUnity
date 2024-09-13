@@ -15,7 +15,7 @@ namespace MoraeGames.Library.Status
         #region Properties
         
         public FloatReactivePropertyWithRange CurrentHP { get; }
-        public IObservable<(float hp, float ratio, float delta)> OnChangedHP => CurrentHP.Pairwise((prev, curr) => (curr, (float)curr / CurrentHP.Max, (curr - prev))).Share();
+        public IObservable<(float hp, float ratio, float delta)> OnChangedHP => CurrentHP.Pairwise((prev, curr) => (curr, curr / CurrentHP.Max, curr - prev)).Share();
         public ToggleAbilityProperty IsInvincible { get; } = new(false);
 
         #endregion
