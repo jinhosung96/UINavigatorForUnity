@@ -8,13 +8,13 @@ using VContainer.Unity;
 
 namespace MoraeGames.Library.Template
 {
-    public class VObject<T> where T : LifetimeScope
+    public class VObject<TScope> where TScope : LifetimeScope
     {
         #region Properties
 
         [Inject] protected LifetimeScope context { private get; set; }
 
-        protected T Context => context as T;
+        protected TScope Context => context as TScope;
 
         #endregion
     }
