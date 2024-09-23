@@ -1,3 +1,4 @@
+#if UNIRX_SUPPORT
 using System;
 using UniRx;
 using UniRx.Triggers;
@@ -48,3 +49,4 @@ namespace MoraeGames.Library.UniRxCustom
         #endregion
     }
 }
+#endif
