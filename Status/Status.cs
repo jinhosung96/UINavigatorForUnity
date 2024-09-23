@@ -53,7 +53,7 @@ namespace MoraeGames.Library.Status
     public class NumericAbilityProperty
     {
         [field: SerializeField] public float BaseValue { get; set; }
-        public float Value => (BaseValue + AdditionEffects.Select(buff => buff.Value).Sum()) * SumEffects.Select(buff => buff.Value).Sum() * MultiplicationEffects.Select(buff => 1 + buff.Value).Aggregate(1f, (a, b) => a * b);
+        public float Value => (BaseValue + AdditionEffects.Select(buff => buff.Value).Sum()) * (1 + SumEffects.Select(buff => buff.Value).Sum()) * MultiplicationEffects.Select(buff => 1 + buff.Value).Aggregate(1f, (a, b) => a * b);
 
         public List<NumericAbilityEffect> AdditionEffects { get; } = new();
         public List<NumericAbilityEffect> SumEffects { get; } = new();
