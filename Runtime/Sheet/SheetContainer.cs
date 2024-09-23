@@ -1,11 +1,11 @@
-#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && UNIRX_SUPPORT
+#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && R3_SUPPORT
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using JHS.Library.UINavigator.Runtime.Util;
-using UniRx;
+using R3;
 using UnityEngine;
 #if ADDRESSABLE_SUPPORT
 using UnityEngine.AddressableAssets;
@@ -150,8 +150,8 @@ namespace JHS.Library.UINavigator.Runtime.Sheet
 
             nextView.UIContainer = this;
 
-            nextView.OnPreInitialize.FirstOrDefault().Subscribe(_ => onPreInitialize?.Invoke(nextView)).AddTo(nextView);
-            nextView.OnPostInitialize.FirstOrDefault().Subscribe(_ => onPostInitialize?.Invoke(nextView)).AddTo(nextView);
+            nextView.OnPreInitialize.Take(1).DefaultIfEmpty().Subscribe((onPreInitialize, nextView), (_, packet) => packet.onPreInitialize?.Invoke(packet.nextView)).AddTo(nextView);
+            nextView.OnPostInitialize.Take(1).DefaultIfEmpty().Subscribe((onPostInitialize, nextView), (_, packet) => packet.onPostInitialize?.Invoke(packet.nextView)).AddTo(nextView);
 
             CurrentView = nextView;
             

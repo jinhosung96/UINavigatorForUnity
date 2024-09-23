@@ -1,10 +1,10 @@
-#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && UNIRX_SUPPORT
+#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && R3_SUPPORT
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using JHS.Library.UINavigator.Runtime.Util;
-using UniRx;
+using R3;
 using UnityEngine;
 #if ADDRESSABLE_SUPPORT
 using UnityEngine.AddressableAssets;
@@ -166,28 +166,28 @@ namespace JHS.Library.UINavigator.Runtime.Page
         #region Private Methods
 
         async UniTask<T> NextAsync<T>(
-            T nextPage,
+            T nextView,
             Action<T> onPreInitialize,
             Action<T> onPostInitialize,
             bool useAnimation) where T : Page
         {
             if (CurrentView && CurrentView.VisibleState is VisibleState.Appearing or VisibleState.Disappearing) return null;
-            if (CurrentView && CurrentView == nextPage) return null;
+            if (CurrentView && CurrentView == nextView) return null;
 
-            nextPage.gameObject.SetActive(false);
-            nextPage = nextPage.IsRecycle
-                ? nextPage
+            nextView.gameObject.SetActive(false);
+            nextView = nextView.IsRecycle
+                ? nextView
                 :
 #if VCONTAINER_SUPPORT
-                VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextPage, transform);
+                VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextView, transform);
 #else
                 Instantiate(nextPage, transform);
 #endif
-            nextPage.UIContainer = this;
+            nextView.UIContainer = this;
 
-            nextPage.OnPreInitialize.FirstOrDefault().Subscribe(_ => onPreInitialize?.Invoke(nextPage)).AddTo(nextPage);
-            nextPage.OnPostInitialize.FirstOrDefault().Subscribe(_ => onPostInitialize?.Invoke(nextPage)).AddTo(nextPage);
-
+            nextView.OnPreInitialize.Take(1).DefaultIfEmpty().Subscribe((onPreInitialize, nextPage: nextView), (_, packet) => packet.onPreInitialize?.Invoke(packet.nextPage)).AddTo(nextView);
+            nextView.OnPostInitialize.Take(1).DefaultIfEmpty().Subscribe((onPostInitialize, nextPage: nextView), (_, packet) => packet.onPostInitialize?.Invoke(packet.nextPage)).AddTo(nextView);
+            
             if (CurrentView)
             {
                 var prevView = CurrentView;
@@ -197,7 +197,7 @@ namespace JHS.Library.UINavigator.Runtime.Page
                 }).Forget();
             }
 
-            History.Push(nextPage);
+            History.Push(nextView);
 
             await CurrentView.ShowAsync(useAnimation);
 

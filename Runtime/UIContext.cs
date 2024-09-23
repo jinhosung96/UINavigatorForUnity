@@ -1,12 +1,13 @@
-#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && UNIRX_SUPPORT
+#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && R3_SUPPORT
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using JHS.Library.UINavigator.Runtime.Animation;
 using JHS.Library.UINavigator.Runtime.Page;
-using UniRx;
-using UniRx.Triggers;
+using MoraeGames.Library.Extension;
+using R3;
+using R3.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer.Unity;
@@ -87,47 +88,47 @@ namespace JHS.Library.UINavigator.Runtime
         /// <summary>
         /// Awake보다 먼저 호출되는 이벤트
         /// </summary>
-        public IObservable<Unit> OnPreInitialize => preInitializeEvent.Share();
+        public Observable<Unit> OnPreInitialize => preInitializeEvent.Share();
         
         /// <summary>
         /// Awake보다 직후 호출되는 이벤트
         /// </summary>
-        public IObservable<Unit> OnPostInitialize => postInitializeEvent.Share();
+        public Observable<Unit> OnPostInitialize => postInitializeEvent.Share();
         
         /// <summary>
         /// UI View가 활성화를 시작할 때 발생하는 이벤트
         /// </summary>
-        public IObservable<Unit> OnAppear => appearEvent.Share();
+        public Observable<Unit> OnAppear => appearEvent.Share();
 
         /// <summary>
         /// UI View가 활성화 애니메이션이 진행 중일 때 매 프레임 발생하는 이벤트
         /// </summary>
-        public IObservable<Unit> OnAppearing => OnChangingVisibleState(OnAppear, OnAppeared);
+        public Observable<Unit> OnAppearing => OnChangingVisibleState(OnAppear, OnAppeared);
 
         /// <summary>
         /// UI View가 활성화가 완전히 끝났을 때 발생하는 이벤트
         /// </summary>
-        public IObservable<Unit> OnAppeared => appearedEvent.Share();
+        public Observable<Unit> OnAppeared => appearedEvent.Share();
 
         /// <summary>
         /// UI View가 활성화 되어 있는동안 매 프레임 발생하는 이벤트
         /// </summary>
-        public IObservable<Unit> OnUpdate => OnChangingVisibleState(OnAppeared, OnDisappear);
+        public Observable<Unit> OnUpdate => OnChangingVisibleState(OnAppeared, OnDisappear);
 
         /// <summary>
         /// UI View가 비활성화를 시작할 때 발생하는 이벤트
         /// </summary>
-        public IObservable<Unit> OnDisappear => disappearEvent.Share();
+        public Observable<Unit> OnDisappear => disappearEvent.Share();
 
         /// <summary>
         /// UI View가 비활성화 애니메이션이 진행 중일 때 매 프레임 발생하는 이벤트
         /// </summary>
-        public IObservable<Unit> OnDisappearing => OnChangingVisibleState(OnDisappear, OnDisappeared);
+        public Observable<Unit> OnDisappearing => OnChangingVisibleState(OnDisappear, OnDisappeared);
 
         /// <summary>
         /// UI View가 비활성화가 완전히 끝났을 때 발생하는 이벤트
         /// </summary>
-        public IObservable<Unit> OnDisappeared => disappearedEvent.Share();
+        public Observable<Unit> OnDisappeared => disappearedEvent.Share();
 
         #endregion
 
@@ -245,7 +246,7 @@ namespace JHS.Library.UINavigator.Runtime
 
         #region Private Methods
 
-        IObservable<Unit> OnChangingVisibleState(IObservable<Unit> begin, IObservable<Unit> end) => this.UpdateAsObservable().SkipUntil(begin).TakeUntil(end).RepeatUntilDestroy(gameObject).Share();
+        Observable<Unit> OnChangingVisibleState(Observable<Unit> begin, Observable<Unit> end) => this.UpdateAsObservable().Stream(begin, end, gameObject.GetCancellationTokenOnDestroy()).Share();
 
         async UniTask InitializeRectTransformAsync(RectTransform rectTransform)
         {

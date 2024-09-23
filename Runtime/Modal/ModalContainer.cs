@@ -1,11 +1,11 @@
-#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && UNIRX_SUPPORT
+#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && R3_SUPPORT
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using JHS.Library.UINavigator.Runtime.Util;
-using UniRx;
+using R3;
 using UnityEngine;
 #if ADDRESSABLE_SUPPORT
 using UnityEngine.AddressableAssets;
@@ -130,7 +130,7 @@ namespace JHS.Library.UINavigator.Runtime.Modal
 
         #region Private Methods
 
-        async UniTask<T> NextAsync<T>(T nextModal,
+        async UniTask<T> NextAsync<T>(T nextView,
                                       Action<T> onPreInitialize,
                                       Action<T> onPostInitialize,
                                       bool useAnimation = true) where T : Modal
@@ -139,35 +139,35 @@ namespace JHS.Library.UINavigator.Runtime.Modal
 
             var backdrop = await ShowBackdrop();
 
-            nextModal.gameObject.SetActive(false);
-            nextModal =
+            nextView.gameObject.SetActive(false);
+            nextView =
 #if VCONTAINER_SUPPORT
-                VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextModal, transform);
+                VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextView, transform);
 #else
                 Instantiate(nextModal, transform);
 #endif
 
-            nextModal.UIContainer = this;
+            nextView.UIContainer = this;
 
-            nextModal.OnPreInitialize.FirstOrDefault().Subscribe(_ => onPreInitialize?.Invoke(nextModal)).AddTo(nextModal);
-            nextModal.OnPostInitialize.FirstOrDefault().Subscribe(_ => onPostInitialize?.Invoke(nextModal)).AddTo(nextModal);
+            nextView.OnPreInitialize.Take(1).DefaultIfEmpty().Subscribe((onPreInitialize, nextModal: nextView), (_, packet) => packet.onPreInitialize?.Invoke(packet.nextModal)).AddTo(nextView);
+            nextView.OnPostInitialize.Take(1).DefaultIfEmpty().Subscribe((onPostInitialize, nextModal: nextView), (_, packet) => packet.onPostInitialize?.Invoke(packet.nextModal)).AddTo(nextView);
 
             if (backdrop)
             {
-                nextModal.BackDrop = backdrop;
+                nextView.BackDrop = backdrop;
 
-                if (nextModal.EnableBackDropButton)
+                if (nextView.EnableBackDropButton)
                 {
-                    if (!nextModal.BackDrop.TryGetComponent<Button>(out var button))
-                        button = nextModal.BackDrop.gameObject.AddComponent<Button>();
+                    if (!nextView.BackDrop.TryGetComponent<Button>(out var button))
+                        button = nextView.BackDrop.gameObject.AddComponent<Button>();
 
                     button.OnClickAsObservable().Subscribe(_ => PrevAsync().Forget());
                 }
             }
 
-            History.Push(nextModal);
+            History.Push(nextView);
 
-            if (nextModal.BackDrop)
+            if (nextView.BackDrop)
             {
                 if (useAnimation)
                 {
