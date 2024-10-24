@@ -105,7 +105,7 @@ namespace JHS.Library.UINavigator.Runtime.Animation
         public override async UniTask AnimateAsync(RectTransform rectTransform)
         {
             rectTransform.anchoredPosition = PositionFromAlignment(rectTransform, Alignment.None);
-            await rectTransform.DOAnchorPos(PositionFromAlignment(rectTransform, to), duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).ToUniTask();
+            await rectTransform.DOAnchorPos(PositionFromAlignment(rectTransform, to), duration).SetDelay(startDelay).SetEase(ease).SetUpdate(true).SetLink(rectTransform.gameObject).ToUniTask();
         }
 
         Vector2 PositionFromAlignment(RectTransform rectTransform, Alignment alignment)
