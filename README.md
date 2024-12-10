@@ -49,6 +49,29 @@ UINavigator는 Unity를 위한 강력하고 유연한 UI 내비게이션 시스�
 
 ## 기본 사용법
 
+### UIContainer
+![image](https://github.com/user-attachments/assets/9fe65ebd-980c-4742-b927-4f554b5e4587)
+
+- AnimationSetting
+  - Move, Rotate, Scale, Fade에 대한 Show & Hide 애니메이션 설정
+- ContainerSetting
+  - 검색을 위한 이름 지정 및 DontDestoryOnLoad 처리 가능
+- InitializeSetting
+  - Container에서 관리한 UIContext 지정(Resources 혹은 Addressable 방식 중에 지정 가능)
+  - HasDefault를 On으로 설정 시 첫번째로 등록한 UIContext를 Default View로 지정(SheetContainer & PageContainer)
+    - Default View는 처음부터 활성화된 상태로 시작하며 History에 포함되지 않는다
+
+### UIContext
+![image](https://github.com/user-attachments/assets/e2fd0a46-3b7a-48ab-9055-2a25cef6abd2)
+
+- AnimationSetting
+  - Move, Rotate, Scale, Fade에 대한 Show & Hide 애니메이션 설정
+  - Container의 설정 값을 따를지 따로 설정해줄지 지정 가능
+- IsRecycle(Sheet & Page)
+  - Show 및 Hide 시 풀링 방식을 사용할지 선택 가능
+- Enable Backdrop Button(Modal)
+  - Modal의 Backdrop에 뒤로가기 기능을 활성화할지 선택 가능
+
 ### Sheet 컨테이너
 
 ```csharp
