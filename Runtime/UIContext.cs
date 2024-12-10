@@ -1,11 +1,10 @@
 #if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && R3_SUPPORT
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using JHS.Library.UINavigator.Runtime.Animation;
 using JHS.Library.UINavigator.Runtime.Page;
-using MoraeGames.Library.Extension;
 using R3;
 using R3.Triggers;
 using UnityEngine;
@@ -246,7 +245,7 @@ namespace JHS.Library.UINavigator.Runtime
 
         #region Private Methods
 
-        Observable<Unit> OnChangingVisibleState(Observable<Unit> begin, Observable<Unit> end) => this.UpdateAsObservable().Stream(begin, end, gameObject.GetCancellationTokenOnDestroy()).Share();
+        Observable<Unit> OnChangingVisibleState(Observable<Unit> begin, Observable<Unit> end) => Stream(this.UpdateAsObservable(), begin, end, gameObject.GetCancellationTokenOnDestroy()).Share();
 
         async UniTask InitializeRectTransformAsync(RectTransform rectTransform)
         {
@@ -257,6 +256,19 @@ namespace JHS.Library.UINavigator.Runtime
             rectTransform.anchoredPosition = Vector2.zero;
             rectTransform.localScale = Vector3.one;
             rectTransform.localRotation = Quaternion.identity;
+        }
+
+        static Observable<T> Stream<T, T1, T2>(Observable<T> source, Observable<T1> beginStream, Observable<T2> endStream, CancellationToken ct)
+        {
+            Subject<T> subject = new Subject<T>();
+            Stream(source, beginStream, endStream, subject, ct).Forget();
+            return subject.TakeUntil(ct).Share();
+        }
+
+        static async UniTask Stream<T, T1, T2>(Observable<T> source, Observable<T1> beginStream, Observable<T2> endStream, Subject<T> subject, CancellationToken ct)
+        {
+            while (!ct.IsCancellationRequested) 
+                await source.SkipUntil(beginStream).TakeUntil(endStream).ForEachAsync(subject.OnNext, ct);
         }
 
         #endregion
