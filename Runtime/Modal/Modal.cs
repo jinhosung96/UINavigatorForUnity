@@ -9,7 +9,7 @@ namespace JHS.Library.UINavigator.Runtime.Modal
         #region Propertys
 
         public CanvasGroup BackDrop { get; internal set; }
-        [field: SerializeField] public bool EnableBackDropButton { get; internal set; } = true;
+        [field: SerializeField] public bool EnableBackdropButton { get; internal set; } = true;
 
         #endregion
     }

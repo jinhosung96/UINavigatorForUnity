@@ -18,8 +18,11 @@ namespace JHS.Library.UINavigator.Editor
         SerializedProperty animationSetting;
         SerializedProperty showAnimation;
         SerializedProperty hideAnimation;
+        SerializedProperty isRecycle;
+        SerializedProperty enableBackdropButton;
 
         readonly string[] animationTabArray = { "Move", "Rotate", "Scale", "Fade" };
+        readonly string[] toggleArray = { "On", "Off" };
         int animationSelectionValue;
 
         #endregion
@@ -33,7 +36,9 @@ namespace JHS.Library.UINavigator.Editor
             "m_Script", 
             "showAnimation", 
             "hideAnimation", 
-            "animationSetting"
+            "animationSetting",
+            "<IsRecycle>k__BackingField",
+            "<EnableBackdropButton>k__BackingField"
         };
 
         SerializedProperty ShowAnimation
@@ -86,8 +91,10 @@ namespace JHS.Library.UINavigator.Editor
         {
             script = serializedObject.FindProperty("m_Script");
             animationSetting = serializedObject.FindProperty("animationSetting");
-            showAnimation = serializedObject.FindProperty($"showAnimation");
-            hideAnimation = serializedObject.FindProperty($"hideAnimation");
+            showAnimation = serializedObject.FindProperty("showAnimation");
+            hideAnimation = serializedObject.FindProperty("hideAnimation");
+            isRecycle = serializedObject.FindProperty("<IsRecycle>k__BackingField");
+            enableBackdropButton = serializedObject.FindProperty("<EnableBackdropButton>k__BackingField");
         }
 
         #endregion
@@ -142,15 +149,34 @@ namespace JHS.Library.UINavigator.Editor
                 }
             }
             EditorGUILayout.EndVertical();
-            EditorGUILayout.Space(9);
-
-            AdditionalGUIProcess();
+            if (isRecycle != null)
+            {
+                EditorGUILayout.Space(3);
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.PrefixLabel(new GUIContent("Is Recycle"));
+                    var select = GUILayout.Toolbar(isRecycle.boolValue ? 0 : 1, toggleArray);
+                    isRecycle.boolValue = select == 0;
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+            if (enableBackdropButton != null)
+            {
+                EditorGUILayout.Space(3);
+                EditorGUILayout.BeginHorizontal();
+                {
+                    EditorGUILayout.PrefixLabel(new GUIContent("Enable Backdrop Button"));
+                    var select = GUILayout.Toolbar(enableBackdropButton.boolValue ? 0 : 1, toggleArray);
+                    enableBackdropButton.boolValue = select == 0;
+                }
+                EditorGUILayout.EndHorizontal();
+            }
 
             DrawPropertiesExcluding(serializedObject, PropertyToExclude());
 
             serializedObject.ApplyModifiedProperties();
         }
-
+        
         #endregion
 
         #region Private Methods
@@ -236,14 +262,6 @@ namespace JHS.Library.UINavigator.Editor
                 else EditorGUI.LabelField(rect, title, targetStyle);
             }
             EditorGUILayout.EndVertical();
-        }
-
-        #endregion
-
-        #region Virtual Methods
-
-        protected virtual void AdditionalGUIProcess()
-        {
         }
 
         #endregion

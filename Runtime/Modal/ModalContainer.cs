@@ -156,7 +156,7 @@ namespace JHS.Library.UINavigator.Runtime.Modal
             {
                 nextView.BackDrop = backdrop;
 
-                if (nextView.EnableBackDropButton)
+                if (nextView.EnableBackdropButton)
                 {
                     if (!nextView.BackDrop.TryGetComponent<Button>(out var button))
                         button = nextView.BackDrop.gameObject.AddComponent<Button>();
