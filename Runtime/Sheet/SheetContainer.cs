@@ -145,7 +145,7 @@ namespace JHS.Library.UINavigator.Runtime.Sheet
 #if VCONTAINER_SUPPORT
                 VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextView, transform);
 #else
-                Instantiate(nextSheet, transform);
+                Instantiate(nextView, transform);
 #endif
 
             nextView.UIContainer = this;

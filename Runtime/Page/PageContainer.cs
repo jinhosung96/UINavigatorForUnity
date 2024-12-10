@@ -181,7 +181,7 @@ namespace JHS.Library.UINavigator.Runtime.Page
 #if VCONTAINER_SUPPORT
                 VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextView, transform);
 #else
-                Instantiate(nextPage, transform);
+                Instantiate(nextView, transform);
 #endif
             nextView.UIContainer = this;
 
