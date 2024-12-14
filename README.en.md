@@ -47,6 +47,31 @@ UINavigator is a powerful and flexible UI navigation system for Unity, providing
    - `ADDRESSABLE_SUPPORT` (if using Addressables)
    - `VCONTAINER_SUPPORT` (if using VContainer)
 
+### Via Package Manager
+
+For Unity 2019.3.4f1 or higher, you can install the package directly through the Package Manager using a Git URL.
+
+1. Open Package Manager (Window > Package Manager)
+2. Click '+' button and select "Add package from git URL"
+3. Enter the following URL:
+```
+https://github.com/jinhosung96/UINavigatorForUnity
+```
+
+Alternatively, you can add it directly to your `Packages/manifest.json`:
+```json
+{
+  "dependencies": {
+    "com.jhs-library.auto-path-generator": "https://github.com/jinhosung96/UINavigatorForUnity"
+  }
+}
+```
+
+To install a specific version, add the #{version} tag to the URL:
+```
+https://github.com/jinhosung96/UINavigatorForUnity#1.0.0
+```
+
 ## Basic Usage
 
 ### Sheet Container

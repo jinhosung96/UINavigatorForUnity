@@ -1,0 +1,14 @@
+{
+    "name": "com.jhs-library.ui-navigator",
+    "version": "1.0.0",
+    "displayName": "UI Navigator",
+    "description": "UI 전환 통합 관리 라이브러리",
+    "unity": "2019.1",
+    "dependencies": {
+        "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask"
+    },
+    "author": {
+        "name": "Hosung Jin",
+        "email": "ghtjd0075@gmail.com"
+    }
+}
