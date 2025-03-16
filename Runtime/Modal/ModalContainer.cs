@@ -1,17 +1,19 @@
-#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && R3_SUPPORT
+#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && (R3_SUPPORT || UNIRX_SUPPORT)
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using JHS.Library.UINavigator.Runtime.Util;
+#if R3_SUPPORT
 using R3;
+#elif UNIRX_SUPPORT
+using UniRx;
+#endif
 using UnityEngine;
 #if ADDRESSABLE_SUPPORT
 using UnityEngine.AddressableAssets;
 #endif
 using UnityEngine.UI;
-using VContainer.Unity;
 using Debug = JHS.Library.UINavigator.Runtime.Util.Debug;
 
 namespace JHS.Library.UINavigator.Runtime.Modal
@@ -142,15 +144,15 @@ namespace JHS.Library.UINavigator.Runtime.Modal
             nextView.gameObject.SetActive(false);
             nextView =
 #if VCONTAINER_SUPPORT
-                VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextView, transform);
+                VContainer.Unity.VContainerSettings.Instance.RootLifetimeScope.Container.Instantiate(nextView, transform);
 #else
                 Instantiate(nextView, transform);
 #endif
 
             nextView.UIContainer = this;
 
-            nextView.OnPreInitialize.Take(1).DefaultIfEmpty().Subscribe((onPreInitialize, nextModal: nextView), (_, packet) => packet.onPreInitialize?.Invoke(packet.nextModal)).AddTo(nextView);
-            nextView.OnPostInitialize.Take(1).DefaultIfEmpty().Subscribe((onPostInitialize, nextModal: nextView), (_, packet) => packet.onPostInitialize?.Invoke(packet.nextModal)).AddTo(nextView);
+            nextView.OnPreInitialize.Take(1).Subscribe(_ => onPreInitialize?.Invoke(nextView)).AddTo(nextView);
+            nextView.OnPostInitialize.Take(1).Subscribe(_ => onPostInitialize?.Invoke(nextView)).AddTo(nextView);
 
             if (backdrop)
             {

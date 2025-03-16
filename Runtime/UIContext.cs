@@ -1,15 +1,21 @@
-#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && R3_SUPPORT
+#if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && (R3_SUPPORT || UNIRX_SUPPORT)
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using JHS.Library.UINavigator.Runtime.Animation;
 using JHS.Library.UINavigator.Runtime.Page;
+#if R3_SUPPORT
 using R3;
-using R3.Triggers;
+using R3.Triggers; 
+#endif
+#if UNIRX_SUPPORT
+using UniRx;
+using UniRx.Triggers; 
+#endif
 using UnityEngine;
 using UnityEngine.UI;
-using VContainer.Unity;
 
 // ReSharper disable HeapView.ObjectAllocation
 
@@ -34,7 +40,7 @@ namespace JHS.Library.UINavigator.Runtime
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(GraphicRaycaster))]
 #if VCONTAINER_SUPPORT
-    public abstract class UIContext : LifetimeScope
+    public abstract class UIContext : VContainer.Unity.LifetimeScope
 #else
     public abstract class UIContext : MonoBehaviour
 #endif
@@ -87,47 +93,83 @@ namespace JHS.Library.UINavigator.Runtime
         /// <summary>
         /// Awake보다 먼저 호출되는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnPreInitialize => preInitializeEvent.Share();
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnPreInitialize => preInitializeEvent.Share();
+#endif
         
         /// <summary>
         /// Awake보다 직후 호출되는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnPostInitialize => postInitializeEvent.Share();
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnPostInitialize => postInitializeEvent.Share();
+#endif
         
         /// <summary>
         /// UI View가 활성화를 시작할 때 발생하는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnAppear => appearEvent.Share();
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnAppear => appearEvent.Share();
+#endif
 
         /// <summary>
         /// UI View가 활성화 애니메이션이 진행 중일 때 매 프레임 발생하는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnAppearing => OnChangingVisibleState(OnAppear, OnAppeared);
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnAppearing => OnChangingVisibleState(OnAppear, OnAppeared);
+#endif
 
         /// <summary>
         /// UI View가 활성화가 완전히 끝났을 때 발생하는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnAppeared => appearedEvent.Share();
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnAppeared => appearedEvent.Share();
+#endif
 
         /// <summary>
         /// UI View가 활성화 되어 있는동안 매 프레임 발생하는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnUpdate => OnChangingVisibleState(OnAppeared, OnDisappear);
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnUpdate => OnChangingVisibleState(OnAppeared, OnDisappear);
+#endif
 
         /// <summary>
         /// UI View가 비활성화를 시작할 때 발생하는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnDisappear => disappearEvent.Share();
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnDisappear => disappearEvent.Share();
+#endif
 
         /// <summary>
         /// UI View가 비활성화 애니메이션이 진행 중일 때 매 프레임 발생하는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnDisappearing => OnChangingVisibleState(OnDisappear, OnDisappeared);
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnDisappearing => OnChangingVisibleState(OnDisappear, OnDisappeared);
+#endif
 
         /// <summary>
         /// UI View가 비활성화가 완전히 끝났을 때 발생하는 이벤트
         /// </summary>
+#if R3_SUPPORT
         public Observable<Unit> OnDisappeared => disappearedEvent.Share();
+#elif UNIRX_SUPPORT
+        public IObservable<Unit> OnDisappeared => disappearedEvent.Share();
+#endif
 
         #endregion
 
@@ -245,7 +287,11 @@ namespace JHS.Library.UINavigator.Runtime
 
         #region Private Methods
 
+#if R3_SUPPORT
         Observable<Unit> OnChangingVisibleState(Observable<Unit> begin, Observable<Unit> end) => Stream(this.UpdateAsObservable(), begin, end, gameObject.GetCancellationTokenOnDestroy()).Share();
+#elif UNIRX_SUPPORT
+        IObservable<Unit> OnChangingVisibleState(IObservable<Unit> begin, IObservable<Unit> end) => this.UpdateAsObservable().SkipUntil(begin).TakeUntil(end).RepeatUntilDestroy(gameObject).Share();
+#endif
 
         async UniTask InitializeRectTransformAsync(RectTransform rectTransform)
         {
@@ -258,6 +304,7 @@ namespace JHS.Library.UINavigator.Runtime
             rectTransform.localRotation = Quaternion.identity;
         }
 
+#if R3_SUPPORT
         static Observable<T> Stream<T, T1, T2>(Observable<T> source, Observable<T1> beginStream, Observable<T2> endStream, CancellationToken ct)
         {
             Subject<T> subject = new Subject<T>();
@@ -270,6 +317,7 @@ namespace JHS.Library.UINavigator.Runtime
             while (!ct.IsCancellationRequested) 
                 await source.SkipUntil(beginStream).TakeUntil(endStream).ForEachAsync(subject.OnNext, ct);
         }
+#endif
 
         #endregion
     }
