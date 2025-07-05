@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace JHS.Library.UINavigator.Runtime.Sheet
 {
-    public abstract class Sheet : UIContext
+    public abstract class Sheet : UIView
     {
         [field: SerializeField] public bool IsRecycle { get; private set; } = true;
     }

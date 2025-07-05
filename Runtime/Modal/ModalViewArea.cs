@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using JHS.Library.UINavigator.Runtime.Util;
 #if R3_SUPPORT
 using R3;
 #elif UNIRX_SUPPORT
@@ -14,11 +15,12 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 #endif
 using UnityEngine.UI;
+using VContainer.Unity;
 using Debug = JHS.Library.UINavigator.Runtime.Util.Debug;
 
 namespace JHS.Library.UINavigator.Runtime.Modal
 {
-    public sealed class ModalContainer : UIContainer<ModalContainer>, IHasHistory, ISerializationCallbackReceiver
+    public sealed class ModalViewArea : UIViewArea<ModalViewArea>, IHasHistory, ISerializationCallbackReceiver
     {
         #region Fields
 
@@ -149,7 +151,7 @@ namespace JHS.Library.UINavigator.Runtime.Modal
                 Instantiate(nextView, transform);
 #endif
 
-            nextView.UIContainer = this;
+            nextView.UIViewArea = this;
 
             nextView.OnPreInitialize.Take(1).Subscribe(_ => onPreInitialize?.Invoke(nextView)).AddTo(nextView);
             nextView.OnPostInitialize.Take(1).Subscribe(_ => onPostInitialize?.Invoke(nextView)).AddTo(nextView);

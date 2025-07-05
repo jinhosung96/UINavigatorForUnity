@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using JHS.Library.UINavigator.Runtime.Util;
 #if R3_SUPPORT
 using R3;
 #elif UNIRX_SUPPORT
 using UniRx;
 #endif
 using UnityEngine;
+using VContainer.Unity;
 #if ADDRESSABLE_SUPPORT
 using UnityEngine.AddressableAssets;
 #endif
@@ -16,7 +18,7 @@ using Debug = JHS.Library.UINavigator.Runtime.Util.Debug;
 
 namespace JHS.Library.UINavigator.Runtime.Page
 {
-    public sealed class PageContainer : UIContainer<PageContainer>, IHasHistory, ISerializationCallbackReceiver
+    public sealed class PageViewArea : UIViewArea<PageViewArea>, IHasHistory, ISerializationCallbackReceiver
     {
         #region Properties
 
@@ -56,7 +58,7 @@ namespace JHS.Library.UINavigator.Runtime.Page
 
             foreach (var x in RegisterPagesByPrefab.Where(x => x.IsRecycle))
             {
-                x.UIContainer = this;
+                x.UIViewArea = this;
                 x.gameObject.SetActive(false);
             }
 
@@ -185,7 +187,7 @@ namespace JHS.Library.UINavigator.Runtime.Page
 #else
                 Instantiate(nextView, transform);
 #endif
-            nextView.UIContainer = this;
+            nextView.UIViewArea = this;
 
             nextView.OnPreInitialize.Take(1).Subscribe(_ => onPreInitialize?.Invoke(nextView)).AddTo(nextView);
             nextView.OnPostInitialize.Take(1).Subscribe(_ => onPostInitialize?.Invoke(nextView)).AddTo(nextView);

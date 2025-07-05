@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JHS.Library.UINavigator.Runtime.Modal
 {
-    public abstract class Modal : UIContext
+    public abstract class Modal : UIView
     {
         #region Propertys
 

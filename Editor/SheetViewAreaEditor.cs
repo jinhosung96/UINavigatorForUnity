@@ -1,36 +1,36 @@
 #if UNITASK_SUPPORT && DOTWEEN_SUPPORT && UNITASK_DOTWEEN_SUPPORT && (R3_SUPPORT || UNIRX_SUPPORT)
 using System.Linq;
 using JHS.Library.UINavigator.Runtime;
-using JHS.Library.UINavigator.Runtime.Page;
+using JHS.Library.UINavigator.Runtime.Sheet;
 using UnityEditor;
 using UnityEngine;
 
 namespace JHS.Library.UINavigator.Editor
 {
-    [CustomEditor(typeof(PageContainer))]
-    public class PageContainerEditor : UIContainerEditor
+    [CustomEditor(typeof(SheetViewArea))]
+    public class SheetViewAreaEditor : UIViewAreaEditor
     {
         #region Fields
 
         SerializedProperty instantiateType;
-        SerializedProperty registerPagesByPrefab;
-        SerializedProperty registerPagesByAddressable;
+        SerializedProperty registerSheetsByPrefab;
+        SerializedProperty registerSheetsByAddressable;
         SerializedProperty hasDefault;
         readonly string[] toggleArray = { "On", "Off" };
 
         #endregion
 
         #region Properties
-
-        PageContainer Target => target as PageContainer;
+        
+        SheetViewArea Target => target as SheetViewArea;
         protected override string[] PropertyToExclude() => base.PropertyToExclude().Concat(new[]
         {
-            $"<{nameof(PageContainer.InstantiateType)}>k__BackingField", 
-            $"<{nameof(PageContainer.RegisterPagesByPrefab)}>k__BackingField", 
+            $"<{nameof(SheetViewArea.InstantiateType)}>k__BackingField", 
+            $"<{nameof(SheetViewArea.RegisterSheetsByPrefab)}>k__BackingField", 
 #if ADDRESSABLE_SUPPORT
-            $"<{nameof(PageContainer.RegisterPagesByAddressable)}>k__BackingField",
+            $"<{nameof(SheetViewArea.RegisterSheetsByAddressable)}>k__BackingField",
 #endif
-            $"<{nameof(PageContainer.HasDefault)}>k__BackingField"
+            $"<{nameof(SheetViewArea.HasDefault)}>k__BackingField"
         }).ToArray();
 
         #endregion
@@ -40,12 +40,12 @@ namespace JHS.Library.UINavigator.Editor
         protected override void OnEnable()
         {
             base.OnEnable();
-            instantiateType = serializedObject.FindProperty($"<{nameof(PageContainer.InstantiateType)}>k__BackingField");
-            registerPagesByPrefab = serializedObject.FindProperty($"<{nameof(PageContainer.RegisterPagesByPrefab)}>k__BackingField");
+            instantiateType = serializedObject.FindProperty($"<{nameof(SheetViewArea.InstantiateType)}>k__BackingField");
+            registerSheetsByPrefab = serializedObject.FindProperty($"<{nameof(SheetViewArea.RegisterSheetsByPrefab)}>k__BackingField");
 #if ADDRESSABLE_SUPPORT
-            registerPagesByAddressable = serializedObject.FindProperty($"<{nameof(PageContainer.RegisterPagesByAddressable)}>k__BackingField");
+            registerSheetsByAddressable = serializedObject.FindProperty($"<{nameof(SheetViewArea.RegisterSheetsByAddressable)}>k__BackingField");
 #endif
-            hasDefault = serializedObject.FindProperty($"<{nameof(PageContainer.HasDefault)}>k__BackingField");
+            hasDefault = serializedObject.FindProperty($"<{nameof(SheetViewArea.HasDefault)}>k__BackingField");
         }
 
         #endregion
@@ -64,11 +64,11 @@ namespace JHS.Library.UINavigator.Editor
                     switch (Target.InstantiateType)
                     {
                         case InstantiateType.InstantiateByPrefab:
-                            EditorGUILayout.PropertyField(registerPagesByPrefab);
+                            EditorGUILayout.PropertyField(registerSheetsByPrefab);
                             break;
 #if ADDRESSABLE_SUPPORT
                         case InstantiateType.InstantiateByAddressable:
-                            EditorGUILayout.PropertyField(registerPagesByAddressable);
+                            EditorGUILayout.PropertyField(registerSheetsByAddressable);
                             break;
 #endif
                     }

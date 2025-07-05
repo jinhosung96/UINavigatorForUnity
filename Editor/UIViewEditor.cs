@@ -9,8 +9,8 @@ using UnityEngine;
 
 namespace JHS.Library.UINavigator.Editor
 {
-    [CustomEditor(typeof(UIContext), true)]
-    public class UIContextEditor : UnityEditor.Editor
+    [CustomEditor(typeof(UIView), true)]
+    public class UIViewEditor : UnityEditor.Editor
     {
         #region Fields
 
@@ -29,7 +29,7 @@ namespace JHS.Library.UINavigator.Editor
 
         #region Properties
 
-        UIContext Target => target as UIContext;
+        UIView Target => target as UIView;
 
         protected virtual string[] PropertyToExclude() => new[]
         {
@@ -48,11 +48,11 @@ namespace JHS.Library.UINavigator.Editor
                 SerializedProperty targetAnimation;
                 if (animationSetting.enumValueIndex == 0)
                 {
-                    var parentContainer = Target.GetComponentInParent<UIContainer>();
+                    var parentContainer = Target.GetComponentInParent<UIViewArea>();
                     if (parentContainer)
                     {
                         var container = new SerializedObject(parentContainer);
-                        targetAnimation = container.FindProperty($"<{nameof(UIContainer.ShowAnimation)}>k__BackingField");
+                        targetAnimation = container.FindProperty($"<{nameof(UIViewArea.ShowAnimation)}>k__BackingField");
                     }
                     else return null;
                 }
@@ -69,11 +69,11 @@ namespace JHS.Library.UINavigator.Editor
                 SerializedProperty targetAnimation;
                 if (animationSetting.enumValueIndex == 0)
                 {
-                    var parentContainer = Target.GetComponentInParent<UIContainer>();
+                    var parentContainer = Target.GetComponentInParent<UIViewArea>();
                     if (parentContainer)
                     {
                         var container = new SerializedObject(parentContainer);
-                        targetAnimation = container.FindProperty($"<{nameof(UIContainer.HideAnimation)}>k__BackingField");
+                        targetAnimation = container.FindProperty($"<{nameof(UIViewArea.HideAnimation)}>k__BackingField");
                     }
                     else return null;
                 }

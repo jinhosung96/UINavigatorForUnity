@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace JHS.Library.UINavigator.Editor
 {
-    [CustomEditor(typeof(ModalContainer))]
-    public class ModalContainerEditor : UIContainerEditor
+    [CustomEditor(typeof(ModalViewArea))]
+    public class ModalViewAreaEditor : UIViewAreaEditor
     {
         #region Fields
 
@@ -21,13 +21,13 @@ namespace JHS.Library.UINavigator.Editor
 
         #region Properties
 
-        ModalContainer Target => target as ModalContainer;
+        ModalViewArea Target => target as ModalViewArea;
         protected override string[] PropertyToExclude() => base.PropertyToExclude().Concat(new[]
         {
-            $"<{nameof(ModalContainer.InstantiateType)}>k__BackingField", 
-            $"<{nameof(ModalContainer.RegisterModalsByPrefab)}>k__BackingField", 
+            $"<{nameof(ModalViewArea.InstantiateType)}>k__BackingField", 
+            $"<{nameof(ModalViewArea.RegisterModalsByPrefab)}>k__BackingField", 
 #if ADDRESSABLE_SUPPORT
-            $"<{nameof(ModalContainer.RegisterModalsByAddressable)}>k__BackingField",
+            $"<{nameof(ModalViewArea.RegisterModalsByAddressable)}>k__BackingField",
 #endif
             "modalBackdrop"
         }).ToArray();
@@ -39,11 +39,11 @@ namespace JHS.Library.UINavigator.Editor
         protected override void OnEnable()
         {
             base.OnEnable();
-            instantiateType = serializedObject.FindProperty($"<{nameof(ModalContainer.InstantiateType)}>k__BackingField");
-            registerModalsByPrefab = serializedObject.FindProperty($"<{nameof(ModalContainer.RegisterModalsByPrefab)}>k__BackingField");
+            instantiateType = serializedObject.FindProperty($"<{nameof(ModalViewArea.InstantiateType)}>k__BackingField");
+            registerModalsByPrefab = serializedObject.FindProperty($"<{nameof(ModalViewArea.RegisterModalsByPrefab)}>k__BackingField");
 #if ADDRESSABLE_SUPPORT
-            registerModalsByAddressable = serializedObject.FindProperty($"<{nameof(ModalContainer.RegisterModalsByAddressable)}>k__BackingField");
-            registerModalsByAddressable = serializedObject.FindProperty($"<{nameof(ModalContainer.RegisterModalsByAddressable)}>k__BackingField");
+            registerModalsByAddressable = serializedObject.FindProperty($"<{nameof(ModalViewArea.RegisterModalsByAddressable)}>k__BackingField");
+            registerModalsByAddressable = serializedObject.FindProperty($"<{nameof(ModalViewArea.RegisterModalsByAddressable)}>k__BackingField");
 #endif
             modalBackdrop = serializedObject.FindProperty("modalBackdrop");
         }

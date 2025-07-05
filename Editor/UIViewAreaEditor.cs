@@ -15,15 +15,15 @@ using Object = UnityEngine.Object;
 
 namespace JHS.Library.UINavigator.Editor
 {
-    [CustomEditor(typeof(UIContainer), true)]
-    public class UIContainerEditor : UnityEditor.Editor
+    [CustomEditor(typeof(UIViewArea), true)]
+    public class UIViewAreaEditor : UnityEditor.Editor
     {
         #region Fields
 
         SerializedProperty script;
         SerializedProperty viewShowAnimation;
         SerializedProperty viewHideAnimation;
-        SerializedProperty containerName;
+        SerializedProperty viewAreaName;
         SerializedProperty isDontDestroyOnLoad;
 
         readonly string[] tabArray = { "Move", "Rotate", "Scale", "Fade" };
@@ -34,13 +34,13 @@ namespace JHS.Library.UINavigator.Editor
 
         #region Properties
 
-        UIContainer Target => target as UIContainer;
+        UIViewArea Target => target as UIViewArea;
         protected virtual string[] PropertyToExclude() => new[]
         {
             "m_Script", 
-            $"<{nameof(UIContainer.ShowAnimation)}>k__BackingField", 
-            $"<{nameof(UIContainer.HideAnimation)}>k__BackingField",
-            $"<{nameof(UIContainer.ContainerName)}>k__BackingField",
+            $"<{nameof(UIViewArea.ShowAnimation)}>k__BackingField", 
+            $"<{nameof(UIViewArea.HideAnimation)}>k__BackingField",
+            $"<{nameof(UIViewArea.ContainerName)}>k__BackingField",
             "isDontDestroyOnLoad"
         };
 
@@ -51,9 +51,9 @@ namespace JHS.Library.UINavigator.Editor
         protected virtual void OnEnable()
         {
             script = serializedObject.FindProperty("m_Script");
-            viewShowAnimation = serializedObject.FindProperty($"<{nameof(UIContainer.ShowAnimation)}>k__BackingField");
-            viewHideAnimation = serializedObject.FindProperty($"<{nameof(UIContainer.HideAnimation)}>k__BackingField");
-            containerName = serializedObject.FindProperty($"<{nameof(UIContainer.ContainerName)}>k__BackingField");
+            viewShowAnimation = serializedObject.FindProperty($"<{nameof(UIViewArea.ShowAnimation)}>k__BackingField");
+            viewHideAnimation = serializedObject.FindProperty($"<{nameof(UIViewArea.HideAnimation)}>k__BackingField");
+            viewAreaName = serializedObject.FindProperty($"<{nameof(UIViewArea.ContainerName)}>k__BackingField");
             isDontDestroyOnLoad = serializedObject.FindProperty("isDontDestroyOnLoad");
         }
 
@@ -70,21 +70,21 @@ namespace JHS.Library.UINavigator.Editor
             GUI.enabled = true;
 
             string prefix = $"Container - {(string.IsNullOrWhiteSpace(Target.ContainerName) ? "" : Target.ContainerName + " ")}";
-            if (Target is SheetContainer && Target.name !=  $"{prefix}Sheet" && GUILayout.Button($"Rename to '{prefix}Sheet'"))
+            if (Target is SheetViewArea && Target.name !=  $"{prefix}Sheet" && GUILayout.Button($"Rename to '{prefix}Sheet'"))
             {
                 Target.name = $"{prefix}Sheet";
             }
-            else if (Target is PageContainer && Target.name !=  $"{prefix}Page" && GUILayout.Button($"Rename to '{prefix}Page'"))
+            else if (Target is PageViewArea && Target.name !=  $"{prefix}Page" && GUILayout.Button($"Rename to '{prefix}Page'"))
             {
                 Target.name = $"{prefix}Page";
             }
-            else if (Target is ModalContainer && Target.name !=  $"{prefix}Modal" && GUILayout.Button($"Rename to '{prefix}Modal'"))
+            else if (Target is ModalViewArea && Target.name !=  $"{prefix}Modal" && GUILayout.Button($"Rename to '{prefix}Modal'"))
             {
                 Target.name = $"{prefix}Modal";
             }
             
             DrawAnimationSetting();
-            DrawContainerSetting();
+            DrawViewAreaSetting();
             
             EditorGUILayout.Space(9);
             AdditionalGUIProcess();
@@ -133,7 +133,7 @@ namespace JHS.Library.UINavigator.Editor
             EditorGUILayout.Space(9);
         }
 
-        void DrawContainerSetting()
+        void DrawViewAreaSetting()
         {
             var area = EditorGUILayout.BeginVertical();
             {
@@ -141,7 +141,7 @@ namespace JHS.Library.UINavigator.Editor
                 DrawTitleField("Container Setting");
                 EditorGUI.indentLevel++;
                 {
-                    EditorGUILayout.PropertyField(containerName);
+                    EditorGUILayout.PropertyField(viewAreaName);
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.PrefixLabel(new GUIContent("IsDontDestroyOnLoad"));

@@ -40,7 +40,7 @@ namespace JHS.Library.UINavigator.Runtime
     [RequireComponent(typeof(Canvas))]
     [RequireComponent(typeof(GraphicRaycaster))]
 #if VCONTAINER_SUPPORT
-    public abstract class UIContext : VContainer.Unity.LifetimeScope
+    public abstract class UIView : VContainer.Unity.LifetimeScope
 #else
     public abstract class UIContext : MonoBehaviour
 #endif
@@ -64,10 +64,10 @@ namespace JHS.Library.UINavigator.Runtime
 
         #region Properties
 
-        static List<UIContext> ActiveUIList { get; } = new();
+        static List<UIView> ActiveUIList { get; } = new();
         float LastShowTime { get; set; }
 
-        public static UIContext FocusUI
+        public static UIView FocusUI
         {
             get
             {
@@ -76,7 +76,7 @@ namespace JHS.Library.UINavigator.Runtime
                     .Where(view => view is not Sheet.Sheet)
                     .Where(view =>
                     {
-                        if (view is Page.Page { UIContainer: PageContainer { HasDefault: true } pageContainer } page) return pageContainer.DefaultPage != page;
+                        if (view is Page.Page { UIViewArea: PageViewArea { HasDefault: true } pageContainer } page) return pageContainer.DefaultPage != page;
                         return true;
                     });
 
@@ -86,7 +86,7 @@ namespace JHS.Library.UINavigator.Runtime
             }
         }
 
-        public UIContainer UIContainer { get; set; }
+        public UIViewArea UIViewArea { get; set; }
         public CanvasGroup CanvasGroup => canvasGroup ? canvasGroup : canvasGroup = GetComponent<CanvasGroup>();
         public VisibleState VisibleState { get; private set; } = VisibleState.Disappeared;
 
@@ -229,7 +229,7 @@ namespace JHS.Library.UINavigator.Runtime
             if (useAnimation)
             {
                 if (animationSetting == AnimationSetting.Custom) await showAnimation.AnimateAsync(rectTransform, CanvasGroup);
-                else await UIContainer.ShowAnimation.AnimateAsync(transform, CanvasGroup);
+                else await UIViewArea.ShowAnimation.AnimateAsync(transform, CanvasGroup);
             }
             await WhenPostAppearAsync();
 
@@ -263,7 +263,7 @@ namespace JHS.Library.UINavigator.Runtime
             if (useAnimation)
             {
                 if (animationSetting == AnimationSetting.Custom) await hideAnimation.AnimateAsync(transform, CanvasGroup);
-                else await UIContainer.HideAnimation.AnimateAsync(transform, CanvasGroup);
+                else await UIViewArea.HideAnimation.AnimateAsync(transform, CanvasGroup);
             }
 
             gameObject.SetActive(false);

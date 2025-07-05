@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace JHS.Library.UINavigator.Runtime.Page
 {
-    public abstract class Page : UIContext
+    public abstract class Page : UIView
     {
         [field: SerializeField] public bool IsRecycle { get; private set; } = true;
     }

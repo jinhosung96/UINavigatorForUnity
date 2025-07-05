@@ -17,9 +17,9 @@ namespace JHS.Library.UINavigator.Runtime
     }
     
     [DefaultExecutionOrder(-1)]
-    public abstract class UIContainer : MonoBehaviour
+    public abstract class UIViewArea : MonoBehaviour
     {
-        static readonly Dictionary<int, UIContainer> Cached = new();
+        static readonly Dictionary<int, UIViewArea> Cached = new();
         [SerializeField] bool isDontDestroyOnLoad; 
 
         #region Properties
@@ -55,7 +55,7 @@ namespace JHS.Library.UINavigator.Runtime
         /// <param name="transform"> Container를 찾을 기준 Transform </param>
         /// <param name="useCache"> 캐싱 사용 여부 </param>
         /// <returns></returns>
-        public static UIContainer Of(Transform transform, bool useCache = true) => Of((RectTransform)transform, useCache);
+        public static UIViewArea Of(Transform transform, bool useCache = true) => Of((RectTransform)transform, useCache);
 
         /// <summary>
         /// 인자 값으로 받은 RectTransform 가장 인접한 Container를 반환한다.
@@ -65,7 +65,7 @@ namespace JHS.Library.UINavigator.Runtime
         /// <param name="rectTransform"> Container를 찾을 기준 RectTransform </param>
         /// <param name="useCache"> 캐싱 사용 여부 </param>
         /// <returns></returns>
-        public static UIContainer Of(RectTransform rectTransform, bool useCache = true)
+        public static UIViewArea Of(RectTransform rectTransform, bool useCache = true)
         {
             var hashCode = rectTransform.GetInstanceID();
 
@@ -74,7 +74,7 @@ namespace JHS.Library.UINavigator.Runtime
                 return container;
             }
 
-            container = rectTransform.GetComponentInParent<UIContainer>();
+            container = rectTransform.GetComponentInParent<UIViewArea>();
             if (container != null)
             {
                 Cached[hashCode] = container;
@@ -86,9 +86,9 @@ namespace JHS.Library.UINavigator.Runtime
 
         public static async UniTask<bool> BackAsync()
         {
-            if (UIContext.FocusUI)
+            if (UIView.FocusUI)
             {
-                await ((IHasHistory)UIContext.FocusUI.UIContainer).PrevAsync();
+                await ((IHasHistory)UIView.FocusUI.UIViewArea).PrevAsync();
                 return true;
             }
 
@@ -98,7 +98,7 @@ namespace JHS.Library.UINavigator.Runtime
         #endregion
     }
 
-    public abstract class UIContainer<T> : UIContainer where T : UIContainer<T>
+    public abstract class UIViewArea<T> : UIViewArea where T : UIViewArea<T>
     {
         #region Fields
 
@@ -112,7 +112,7 @@ namespace JHS.Library.UINavigator.Runtime
         {
             get
             {
-                T main = MainUIContainers.In.GetMain<T>();
+                T main = MainUIViewAreas.In.GetMain<T>();
                 if (main) return main;
                 
                 for (int i = 0; i < SceneManager.sceneCount; i++)
@@ -121,7 +121,7 @@ namespace JHS.Library.UINavigator.Runtime
                     if (scene.isLoaded)
                     {
                         main = scene.GetRootGameObjects().Select(root => root.GetComponentInChildren<T>()).FirstOrDefault(x => x);
-                        MainUIContainers.In.SetMain(main);
+                        MainUIViewAreas.In.SetMain(main);
                         if (main) return main;
                     }
                 }
